@@ -17,14 +17,14 @@ $tab = $_GET['tab'] ?? 'empresas';
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Panel Admin</title>
+  <title>Panel del admin</title>
   <link rel="stylesheet" href="../css/estilo.css">
 </head>
 <body>
   <div class="logout-link">
     <a href="logout.php">Cerrar sesión</a>
   </div>
-  <h1>Panel del Superadmin</h1>
+  <h1>Panel del admin</h1>
 
   <div class="tabs">
     <a href="?tab=empresas" class="<?= $tab === 'empresas' ? 'active' : '' ?>">Empresas</a>
