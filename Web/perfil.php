@@ -39,6 +39,9 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
   <title>SkillSelector - Panel del usuario</title>
 </head>
 <body>
+  <div class="logout-link">
+    <a href="logout.php">Cerrar sesión</a>
+  </div>
   <h1>Panel del usuario</h1>
   <form method="POST">
     <?php foreach ($habilidades as $hab): ?>
