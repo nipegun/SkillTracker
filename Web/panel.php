@@ -21,6 +21,9 @@ $tab = $_GET['tab'] ?? 'empresas';
   <link rel="stylesheet" href="../css/estilo.css">
 </head>
 <body>
+  <div class="logout-link">
+    <a href="logout.php">Cerrar sesión</a>
+  </div>
   <h1>Panel del Superadmin</h1>
 
   <div class="tabs">
