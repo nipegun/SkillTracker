@@ -115,11 +115,20 @@
       echo ""
       sudo mysql -u root -pP@ssw0rd -e "DROP DATABASE SkillSelector;"
 
+    # Create the user and the database
+      echo ""
+      echo "    Creating the database & user..."
+      echo ""
+      mysql -uroot -pP@ssw0rd -e "CREATE DATABASE SkillSelector; CREATE USER 'SkillSelector'@'localhost' IDENTIFIED BY 'P@ssw0rd'; GRANT ALL PRIVILEGES ON SkillSelector.* TO 'SkillSelector'@'localhost'; FLUSH PRIVILEGES;"
+
+
+
     # Create the new database
       echo ""
       echo "    Importing the new database..."
       echo ""
       cd /tmp/SkillSelector/DB/
+      sudo chmod +x /tmp/SkillSelector/DB/ImportDB.sh
       ./ImportDB.sh
 
 
