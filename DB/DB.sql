@@ -71,7 +71,7 @@ INSERT INTO usuarios (
   'General',
   '',
   'admin@ejemplo.com',
-  '$2y$10$eJZSTkmlJSQv.d0R.Z3yxepVZgDFp7rYQceD99QuAdTuJ7qx4e.CS', -- ← hash de "admin123"
+  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- ← hash de "admin123"
   1,
   1,
   'Madrid',
