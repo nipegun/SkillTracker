@@ -102,7 +102,7 @@
       echo ""
       echo "    Cloning the Github repository..."
       echo ""
-      rm -rf /tmp/SkillSelector/
+      sudo rm -rf /tmp/SkillSelector/
       cd /tmp
       git clone --depth=1 https://github.com/nipegun/SkillSelector
 
@@ -153,6 +153,8 @@
       echo ""
       echo "    Copiando archivos de la web..."
       echo ""
+      sudo rm -rf /var/www/SkillSelector/
+      sudo rm -rf /var/www/SkillSelectorLogs/
       sudo mkdir -p /var/www/SkillSelector/
       sudo mkdir -p /var/www/SkillSelectorLogs/
       sudo cp -vr /tmp/SkillSelector/Web/* /var/www/SkillSelector/
