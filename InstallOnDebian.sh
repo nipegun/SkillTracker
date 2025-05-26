@@ -117,7 +117,7 @@
 
     # Create the new database
       echo ""
-      echo "    Importando la nueva base de datos..."
+      echo "    Importing the new database..."
       echo ""
       cd /tmp/SkillSelector/DB/
       ./ImportDB.sh
