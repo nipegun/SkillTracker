@@ -88,9 +88,45 @@
     echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 12 (Bookworm)...${cColorEnd}"
     echo ""
 
-    echo ""
-    echo -e "${cColorRed}    Commands for Debian 12 are not yet prepared. Try running this on another Debian version.${cColorEnd}"
-    echo ""
+    # Instalar los paquetes necesarios para que el script se ejecute correctamente
+      echo ""
+      echo "    Installing all the required packages for the script to execute without errors..."
+      echo ""
+      sudo apt-get -y update
+      sudo apt-get -y install git
+      sudo apt-get -y install mariadb
+      sudo apt-get -y install apache2
+      sudo apt-get -y install php
+
+    # Clonar el repo
+      echo ""
+      echo "    Cloning the Github repository..."
+      echo ""
+      cd /tmp
+      git clone --depth=1 https://github.com/nipegun/SkillSelector
+
+    # Borrar la base de datos anterior
+      echo ""
+      echo "    Erasing the previous database..."
+      echo ""
+      
+
+    # Crear la base de datos
+
+    # Configurar el servidor web
+      echo ""  | sudo tee    /etc/apache2/sites-available/SkillSelector.conf
+      echo ""  | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+
+    # Activar la web
+      echo ""
+      echo "  Activating SkillSelector web on apache2..."
+      echo ""
+      sudo a2ensite SkillSelector
+
+    # Notificar fin de ejecución del script
+      echo ""
+      echo "    Instalation script, ended."
+      echo ""
 
   elif [ $cOSVersion == "11" ]; then
 
