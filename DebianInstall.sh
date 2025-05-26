@@ -6,22 +6,22 @@
 # You don't have to accept any terms of use or license to use or modify it, because it comes with no CopyLeft.
 
 # ----------
-# NiPeGun's script to install and configure SkillSelector on Debian
+# NiPeGun's script to install and configure SkillTracker on Debian
 #
 # Remote execution (may require sudo privileges):
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash
 #
 # Remote execution as root (for systems without sudo):
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
 #
 # Remote execution without cache:
-#   curl -sL -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | bash
+#   curl -sL -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash
 #
 # Remote execution with parameters:
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | bash -s Parámetro1 Parámetro2
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash -s Parámetro1 Parámetro2
 #
 # Download and edit the file directly in nano:
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | nano -
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | nano -
 # ----------
 
 # Define color constants in Bash (for terminal output):
@@ -75,7 +75,7 @@
   if [ $cOSVersion == "13" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 13 (x)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 13 (x)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -85,7 +85,7 @@
   elif [ $cOSVersion == "12" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 12 (Bookworm)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 12 (Bookworm)...${cColorEnd}"
     echo ""
 
     # Instalar los paquetes necesarios para que el script se ejecute correctamente
@@ -103,9 +103,9 @@
       echo ""
       echo "    Cloning the Github repository..."
       echo ""
-      sudo rm -rf /tmp/SkillSelector/
+      sudo rm -rf /tmp/SkillTracker/
       cd /tmp
-      git clone --depth=1 https://github.com/nipegun/SkillSelector
+      git clone --depth=1 https://github.com/nipegun/SkillTracker
 
     # Cambiar la contraseña del usuario root de MariaDB
       sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd'; FLUSH PRIVILEGES;"
@@ -114,13 +114,13 @@
       echo ""
       echo "    Erasing the previous database..."
       echo ""
-      sudo mysql -u root -pP@ssw0rd -e "DROP DATABASE SkillSelector;"
+      sudo mysql -u root -pP@ssw0rd -e "DROP DATABASE SkillTracker;"
 
     # Create the user and the database
       echo ""
       echo "    Creating the database & user..."
       echo ""
-      mysql -uroot -pP@ssw0rd -e "CREATE DATABASE SkillSelector; CREATE USER 'SkillSelector'@'localhost' IDENTIFIED BY 'P@ssw0rd'; GRANT ALL PRIVILEGES ON SkillSelector.* TO 'SkillSelector'@'localhost'; FLUSH PRIVILEGES;"
+      mysql -uroot -pP@ssw0rd -e "CREATE DATABASE SkillTracker; CREATE USER 'SkillTracker'@'localhost' IDENTIFIED BY 'P@ssw0rd'; GRANT ALL PRIVILEGES ON SkillTracker.* TO 'SkillTracker'@'localhost'; FLUSH PRIVILEGES;"
 
 
 
@@ -128,8 +128,8 @@
       echo ""
       echo "    Importing the new database..."
       echo ""
-      cd /tmp/SkillSelector/DB/
-      sudo chmod +x /tmp/SkillSelector/DB/ImportDB.sh
+      cd /tmp/SkillTracker/DB/
+      sudo chmod +x /tmp/SkillTracker/DB/ImportDB.sh
       ./ImportDB.sh
 
     # Deshabilitar el sitio por defecto
@@ -143,22 +143,22 @@
       echo ""
       echo "    Configurando el servidor web..."
       echo ""
-      echo "<VirtualHost *:80>"                                            | sudo tee    /etc/apache2/sites-available/SkillSelector.conf
-      echo "  ServerAdmin webmaster@localhost"                             | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
-      echo "  DocumentRoot /var/www/SkillSelector"                         | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
-      echo "  ErrorLog     /var/www/SkillSelectorLogs/error.log"           | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
-      echo "  CustomLog    /var/www/SkillSelectorLogs/access.log combined" | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
-      echo "</VirtualHost>"                                                | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+      echo "<VirtualHost *:80>"                                           | sudo tee    /etc/apache2/sites-available/SkillTracker.conf
+      echo "  ServerAdmin webmaster@localhost"                            | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+      echo "  DocumentRoot /var/www/SkillTracker"                         | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+      echo "  ErrorLog     /var/www/SkillTrackerLogs/error.log"           | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+      echo "  CustomLog    /var/www/SkillTrackerLogs/access.log combined" | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+      echo "</VirtualHost>"                                               | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
 
     # Copiando archivos de la web
       echo ""
       echo "    Copiando archivos de la web..."
       echo ""
-      sudo rm -rf /var/www/SkillSelector/
-      sudo rm -rf /var/www/SkillSelectorLogs/
-      sudo mkdir -p /var/www/SkillSelector/
-      sudo mkdir -p /var/www/SkillSelectorLogs/
-      sudo cp -vr /tmp/SkillSelector/Web/* /var/www/SkillSelector/
+      sudo rm -rf   /var/www/SkillTracker/
+      sudo rm -rf   /var/www/SkillTrackerLogs/
+      sudo mkdir -p /var/www/SkillTracker/
+      sudo mkdir -p /var/www/SkillTrackerLogs/
+      sudo cp -vr /tmp/SkillTracker/Web/* /var/www/SkillTracker/
       # Reparar permisos
         echo ""
         echo "      Reparando permisos..."
@@ -167,9 +167,9 @@
 
     # Activar la web
       echo ""
-      echo "  Activating SkillSelector web on apache2..."
+      echo "  Activating SkillTracker web on apache2..."
       echo ""
-      sudo a2ensite SkillSelector
+      sudo a2ensite SkillTracker
       sudo systemctl reload apache2
 
     # Notificar fin de ejecución del script
@@ -180,7 +180,7 @@
   elif [ $cOSVersion == "11" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 11 (Bullseye)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 11 (Bullseye)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -190,7 +190,7 @@
   elif [ $cOSVersion == "10" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 10 (Buster)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 10 (Buster)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -200,7 +200,7 @@
   elif [ $cOSVersion == "9" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 9 (Stretch)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 9 (Stretch)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -210,7 +210,7 @@
   elif [ $cOSVersion == "8" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 8 (Jessie)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 8 (Jessie)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -220,7 +220,7 @@
   elif [ $cOSVersion == "7" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 7 (Wheezy)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 7 (Wheezy)...${cColorEnd}"
     echo ""
 
     echo ""
