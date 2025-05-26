@@ -20,7 +20,6 @@ function esSuperAdmin() {
  */
 function requerirLogin() {
   if (!usuarioAutenticado()) {
-    // Si tu app no está en la raíz, ajusta esta ruta
     header("Location: /index.php");
     exit;
   }
