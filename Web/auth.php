@@ -12,7 +12,7 @@ function usuarioAutenticado() {
  * Devuelve true si el usuario es superadministrador.
  */
 function esSuperAdmin() {
-  return isset($_SESSION['es_admin']) && $_SESSION['es_admin'] === true;
+  return isset($_SESSION['es_admin']) && $_SESSION['es_admin'];
 }
 
 /**
