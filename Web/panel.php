@@ -1,6 +1,6 @@
 <?php
-require_once '../includes/db.php';
-require_once '../includes/auth.php';
+require_once 'db.php';
+require_once 'auth.php';
 
 requerirLogin();
 if (!esSuperAdmin()) {
