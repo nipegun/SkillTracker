@@ -39,7 +39,7 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
   <title>Mis habilidades</title>
 </head>
 <body>
-  <h1>Mis habilidades</h1>
+  <h1>Panel del usuario</h1>
   <form method="POST">
     <?php foreach ($habilidades as $hab): ?>
       <label>
