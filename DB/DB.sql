@@ -57,12 +57,25 @@ INSERT INTO oficinas (nombre, ciudad) VALUES ('Oficina Central', 'Madrid');
 
 -- Usuario superadmin (contraseña: admin123)
 INSERT INTO usuarios (
-  nombre, apellido_paterno, apellido_materno, email,
-  password_hash, oficina_id, empresa_id, ciudad, es_admin
+  nombre,
+  apellido_paterno,
+  apellido_materno,
+  email,
+  password_hash,
+  oficina_id,
+  empresa_id,
+  ciudad,
+  es_admin
 ) VALUES (
-  'Admin', 'General', '', 'admin@ejemplo.com',
+  'Admin',
+  'General',
+  '',
+  'admin@ejemplo.com',
   '$2y$10$eJZSTkmlJSQv.d0R.Z3yxepVZgDFp7rYQceD99QuAdTuJ7qx4e.CS', -- ← hash de "admin123"
-  1, 1, 'Madrid', 1
+  1,
+  1,
+  'Madrid',
+  1
 );
 
 -- Algunas habilidades iniciales
