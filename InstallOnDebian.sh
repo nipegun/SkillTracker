@@ -75,7 +75,7 @@
   if [ $cOSVersion == "13" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 13 (x)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 13 (x)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -85,7 +85,7 @@
   elif [ $cOSVersion == "12" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 12 (Bookworm)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 12 (Bookworm)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -95,7 +95,7 @@
   elif [ $cOSVersion == "11" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 11 (Bullseye)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 11 (Bullseye)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -105,7 +105,7 @@
   elif [ $cOSVersion == "10" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 10 (Buster)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 10 (Buster)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -115,7 +115,7 @@
   elif [ $cOSVersion == "9" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 9 (Stretch)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 9 (Stretch)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -125,7 +125,7 @@
   elif [ $cOSVersion == "8" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 8 (Jessie)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 8 (Jessie)...${cColorEnd}"
     echo ""
 
     echo ""
@@ -135,7 +135,7 @@
   elif [ $cOSVersion == "7" ]; then
 
     echo ""
-    echo -e "${cColorBlueLight}  Starting the installation script of xxxxxxxxx for Debian 7 (Wheezy)...${cColorEnd}"
+    echo -e "${cColorBlueLight}  Starting the installation script of SkillSelector for Debian 7 (Wheezy)...${cColorEnd}"
     echo ""
 
     echo ""
