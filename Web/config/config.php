@@ -1,4 +1,4 @@
-// config.php
+<?php
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'SkillSelector');
 define('DB_USER', 'SkillSelector');
