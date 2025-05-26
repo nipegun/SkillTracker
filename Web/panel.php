@@ -18,7 +18,7 @@ $tab = $_GET['tab'] ?? 'empresas';
 <head>
   <meta charset="utf-8">
   <title>Panel del admin</title>
-  <link rel="stylesheet" href="../css/estilo.css">
+  <link rel="stylesheet" href="/css/estilo.css">
 </head>
 <body>
   <div class="logout-link">
