@@ -4,15 +4,15 @@
   echo ""
   echo "    Cloning the Github repository..."
   echo ""
-  sudo rm -rf /tmp/SkillSelector/
+  sudo rm -rf /tmp/SkillTracker/
   cd /tmp
-  git clone --depth=1 https://github.com/nipegun/SkillSelector
+  git clone --depth=1 https://github.com/nipegun/SkillTracker
 
 # Erase the previus web files
-  sudo rm -rf /var/www/SkillSelector/*
+  sudo rm -rf /var/www/SkillTracker/*
 
 # Copy new files
-  sudo cp -vr /tmp/SkillSelector/Web/* /var/www/SkillSelector/
+  sudo cp -vr /tmp/SkillTracker/Web/* /var/www/SkillTracker/
   # Repair permissions
     echo ""
     echo "      Reparando permisos..."
