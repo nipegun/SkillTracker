@@ -1,5 +1,7 @@
 -- Estructura de base de datos para el sistema de gestión de habilidades y proyectos
 
+use SkillSelector;
+
 CREATE TABLE empresas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL
