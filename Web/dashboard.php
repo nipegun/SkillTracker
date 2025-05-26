@@ -4,10 +4,10 @@ require_once 'auth.php';
 requerirLogin();
 
 if (esSuperAdmin()) {
-  header("Location: admin/panel.php");
+  header("Location: panel.php");
   exit;
 } else {
-  header("Location: usuario/perfil.php");
+  header("Location: perfil.php");
   exit;
 }
 ?>
