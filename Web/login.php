@@ -4,7 +4,7 @@
 #ini_set('display_startup_errors', 1);
 #error_reporting(E_ALL);
 
-require_once 'includes/db.php';
+require_once 'db.php';
 session_start();
 
 // Validar que se hayan recibido los datos esperados
