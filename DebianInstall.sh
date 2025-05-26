@@ -9,19 +9,19 @@
 # NiPeGun's script to install and configure SkillSelector on Debian
 #
 # Remote execution (may require sudo privileges):
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/InstallOnDebian.sh | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | bash
 #
 # Remote execution as root (for systems without sudo):
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/InstallOnDebian.sh | sed 's-sudo--g' | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
 #
 # Remote execution without cache:
-#   curl -sL -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/InstallOnDebian.sh | bash
+#   curl -sL -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | bash
 #
 # Remote execution with parameters:
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/InstallOnDebian.sh | bash -s Parámetro1 Parámetro2
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | bash -s Parámetro1 Parámetro2
 #
 # Download and edit the file directly in nano:
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/InstallOnDebian.sh | nano -
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillSelector/refs/heads/main/DebianInstall.sh | nano -
 # ----------
 
 # Define color constants in Bash (for terminal output):
