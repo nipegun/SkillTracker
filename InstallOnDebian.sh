@@ -97,6 +97,7 @@
       sudo apt-get -y install apache2
       sudo apt-get -y install php
       sudo apt-get -y install mariadb-server
+      sudo apt-get -y install php-mysql
 
     # Clonar el repo
       echo ""
