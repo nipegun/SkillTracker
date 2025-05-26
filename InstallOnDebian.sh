@@ -131,16 +131,43 @@
       sudo chmod +x /tmp/SkillSelector/DB/ImportDB.sh
       ./ImportDB.sh
 
+    # Deshabilitar el sitio por defecto
+      echo ""
+      echo "    Deshabilitando el sitio por defecto de Apache2..."
+      echo ""
+      sudo a2dissite 000-default
+      sudo systemctl reload apache2
 
     # Configurar el servidor web
-      echo ""  | sudo tee    /etc/apache2/sites-available/SkillSelector.conf
-      echo ""  | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+      echo ""
+      echo "    Configurando el servidor web..."
+      echo ""
+      echo "<VirtualHost *:80>"                                            | sudo tee    /etc/apache2/sites-available/SkillSelector.conf
+      echo "  ServerAdmin webmaster@localhost"                             | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+      echo "  DocumentRoot /var/www/SkillSelector"                         | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+      echo "  ErrorLog     /var/www/SkillSelectorLogs/error.log"           | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+      echo "  CustomLog    /var/www/SkillSelectorLogs/access.log combined" | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+      echo "</VirtualHost>"                                                | sudo tee -a /etc/apache2/sites-available/SkillSelector.conf
+
+    # Copiando archivos de la web
+      echo ""
+      echo "    Copiando archivos de la web..."
+      echo ""
+      sudo mkdir -p /var/www/SkillSelector/
+      sudo mkdir -p /var/www/SkillSelectorLogs/
+      sudo cp -vr /tmp/SkillSelector/Web/* /var/www/SkillSelector/
+      # Reparar permisos
+        echo ""
+        echo "      Reparando permisos..."
+        echo ""
+        sudo chown www-data:www-data /var/www/ -Rv
 
     # Activar la web
       echo ""
       echo "  Activating SkillSelector web on apache2..."
       echo ""
       sudo a2ensite SkillSelector
+      sudo systemctl reload apache2
 
     # Notificar fin de ejecución del script
       echo ""
