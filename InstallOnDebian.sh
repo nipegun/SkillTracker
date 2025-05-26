@@ -94,24 +94,34 @@
       echo ""
       sudo apt-get -y update
       sudo apt-get -y install git
-      sudo apt-get -y install mariadb
       sudo apt-get -y install apache2
       sudo apt-get -y install php
+      sudo apt-get -y install mariadb-server
 
     # Clonar el repo
       echo ""
       echo "    Cloning the Github repository..."
       echo ""
+      rm -rf /tmp/SkillSelector/
       cd /tmp
       git clone --depth=1 https://github.com/nipegun/SkillSelector
 
-    # Borrar la base de datos anterior
+    # Cambiar la contraseña del usuario root de MariaDB
+      sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd'; FLUSH PRIVILEGES;"
+
+    # Erase the previous database
       echo ""
       echo "    Erasing the previous database..."
       echo ""
-      
+      sudo mysql -u root -pP@ssw0rd -e "DROP DATABASE SkillSelector;"
 
-    # Crear la base de datos
+    # Create the new database
+      echo ""
+      echo "    Importando la nueva base de datos..."
+      echo ""
+      cd /tmp/SkillSelector/DB/
+      ./ImportDB.sh
+
 
     # Configurar el servidor web
       echo ""  | sudo tee    /etc/apache2/sites-available/SkillSelector.conf
