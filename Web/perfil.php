@@ -37,6 +37,7 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
 <head>
   <meta charset="utf-8">
   <title>SkillTracker - Panel del usuario</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
   <div class="logout-link">
