@@ -36,7 +36,7 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
 <html>
 <head>
   <meta charset="utf-8">
-  <title>SkillSelector - Panel del usuario</title>
+  <title>SkillTracker - Panel del usuario</title>
 </head>
 <body>
   <div class="logout-link">
