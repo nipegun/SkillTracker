@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mysql -u SkillSelector -pP@ssw0rd SkillSelector < DB.sql
+mysql -u SkillTracker -pP@ssw0rd SkillTracker < DB.sql
