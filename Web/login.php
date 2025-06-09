@@ -1,23 +1,26 @@
 <?php
 
-#ini_set('display_errors', 1);
-#ini_set('display_startup_errors', 1);
-#error_reporting(E_ALL);
-
 require_once 'db.php';
 session_start();
 
-// Validar que se hayan recibido los datos esperados
-if (!isset($_POST['email'], $_POST['password'])) {
+// Verificar que se recibieron los datos esperados
+if (!isset($_POST['email'], $_POST['password'], $_POST['csrf_token'])) {
   die("Faltan datos del formulario.");
 }
+
+// Validar token CSRF
+if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+  die("Token CSRF inválido.");
+}
+// Eliminar el token de sesión para que no pueda reutilizarse
+unset($_SESSION['csrf_token']);
 
 $email = trim($_POST['email']);
 $pass = $_POST['password'];
 
 // Validar el formato del email
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-  die("Email inválido.");
+  die("Email o contraseña incorrectos."); // Mensaje neutro para evitar enumeración
 }
 
 try {
@@ -26,17 +29,21 @@ try {
   $usuario = $stmt->fetch();
 
   if ($usuario && password_verify($pass, $usuario['password_hash'])) {
+    // Regenerar ID de sesión para evitar fijación
+    session_regenerate_id(true);
+    
     $_SESSION['usuario_id'] = $usuario['id'];
     $_SESSION['es_admin'] = $usuario['es_admin'];
     header("Location: dashboard.php");
     exit;
   } else {
-    echo "Credenciales incorrectas.";
+    // Mensaje neutro
+    echo "Email o contraseña incorrectos.";
   }
+
 } catch (PDOException $e) {
-  // No mostrar el error real al usuario, registrar en logs si hace falta
+  // Registrar error sin exponerlo al usuario
   error_log("Error en login: " . $e->getMessage());
   echo "Error interno. Intenta más tarde.";
 }
 ?>
-
