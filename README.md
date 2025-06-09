@@ -7,7 +7,7 @@ SkillTracker es un servicio web que permite a los miembros de una empresa consul
 La forma más fácil y rápida de instalar SkillTracker en una distro Debian o derivada es ejecutar con un usuario del grupo sudo:
 
 ```
-curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash
 ```
 ...o ejecutar como root:
 
