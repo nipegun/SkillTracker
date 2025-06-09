@@ -113,8 +113,6 @@
       echo ""
       mysql -uroot -pP@ssw0rd -e "CREATE DATABASE SkillTracker; CREATE USER 'SkillTracker'@'localhost' IDENTIFIED BY 'P@ssw0rd'; GRANT ALL PRIVILEGES ON SkillTracker.* TO 'SkillTracker'@'localhost'; FLUSH PRIVILEGES;"
 
-
-
     # Create the new database
       echo ""
       echo "    Importing the new database..."
