@@ -139,7 +139,8 @@ $tab = $_GET['tab'] ?? 'empresas';
         </table>
 
       <?php elseif ($tab === 'habilidades'): ?>
-        <h2>Nueva habilades.php" method="POST">
+        <h2>Nueva habilidad</h2>
+          <form action="habilidades.php" method="POST">
             <input type="text" name="nombre_habilidad" required placeholder="Nombre de la habilidad">
             <button>Crear</button>
           </form>
