@@ -1,5 +1,5 @@
 <?php
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'SkillSelector');
-define('DB_USER', 'SkillSelector');
+define('DB_NAME', 'SkillTracker');
+define('DB_USER', 'SkillTracker');
 define('DB_PASS', 'P@ssw0rd');
