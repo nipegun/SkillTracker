@@ -90,6 +90,7 @@ $tab = $_GET['tab'] ?? 'empresas';
           <input name="apellido_materno" placeholder="Apellido materno">
           <br>
           <input name="email" type="email" required placeholder="Email">
+          <br>
           <input name="password" type="password" required placeholder="Contraseña">
 
           <select name="empresa_id" required>
@@ -108,6 +109,7 @@ $tab = $_GET['tab'] ?? 'empresas';
 
           <input name="ciudad" placeholder="Ciudad" required>
           <label><input type="checkbox" name="es_admin"> Es admin</label>
+          <br>
           <button>Crear</button>
         </form>
 
