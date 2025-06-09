@@ -16,6 +16,7 @@ $usuarios = $pdo->query("
   JOIN empresas e ON u.empresa_id = e.id
   JOIN oficinas o ON u.oficina_id = o.id
 ")->fetchAll();
+$habilidades = $pdo->query("SELECT * FROM habilidades")->fetchAll();
 
 $tab = $_GET['tab'] ?? 'empresas';
 ?>
