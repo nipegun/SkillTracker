@@ -88,6 +88,7 @@ $tab = $_GET['tab'] ?? 'empresas';
           <input name="nombre" placeholder="Nombre" required>
           <input name="apellido_paterno" placeholder="Apellido paterno" required>
           <input name="apellido_materno" placeholder="Apellido materno">
+          <br>
           <input name="email" type="email" required placeholder="Email">
           <input name="password" type="password" required placeholder="Contraseña">
 
