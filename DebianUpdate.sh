@@ -15,7 +15,7 @@
   sudo cp -vr /tmp/SkillTracker/Web/* /var/www/SkillTracker/
   # Repair permissions
     echo ""
-    echo "      Reparando permisos..."
+    echo "      Repairing permissions..."
     echo ""
     sudo chown www-data:www-data /var/www/ -Rv
 
