@@ -31,15 +31,6 @@
   cColorRed='\033[1;31m'
   cColorEnd='\033[0m'
 
-# Check if the script is running as root
-  #if [ $(id -u) -ne 0 ]; then     # Only check if the script is running as root
-  if [[ $EUID -ne 0 ]]; then       # Check if the script is running as root or with sudo
-    echo ""
-    echo -e "${cColorRed}  This script is designed to be run with administrative privileges (as root or using sudo).${cColorEnd}"
-    echo ""
-    exit
-  fi
-
 # Check if the curl package is installed. If it's not, install it:
   if [[ $(dpkg-query -s curl 2>/dev/null | grep installed) == "" ]]; then
     echo ""
