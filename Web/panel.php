@@ -134,6 +134,24 @@ $tab = $_GET['tab'] ?? 'empresas';
           <?php endforeach; ?>
         </table>
 
+      <?php elseif ($tab === 'habilidades'): ?>
+        <h2>Nueva habilidad</h2>
+          <form action="habilidades.php" method="POST">
+            <input type="text" name="nombre_habilidad" required placeholder="Nombre de la habilidad">
+            <button>Crear</button>
+          </form>
+
+        <h2>Habilidades registradas</h2>
+        <table>
+          <tr><th>ID</th><th>Nombre</th></tr>
+          <?php foreach ($habilidades as $h): ?>
+          <tr>
+            <td><?= htmlspecialchars($h['id']) ?></td>
+            <td><?= htmlspecialchars($h['nombre']) ?></td>
+          </tr>
+          <?php endforeach; ?>
+        </table>
+
       <?php else: ?>
         <p>Pestaña no válida.</p>
       <?php endif; ?>
