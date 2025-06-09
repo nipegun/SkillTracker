@@ -39,6 +39,7 @@ $tab = $_GET['tab'] ?? 'empresas';
       <a href="?tab=empresas" class="<?= $tab === 'empresas' ? 'active' : '' ?>">Empresas</a>
       <a href="?tab=oficinas" class="<?= $tab === 'oficinas' ? 'active' : '' ?>">Oficinas</a>
       <a href="?tab=usuarios" class="<?= $tab === 'usuarios' ? 'active' : '' ?>">Usuarios</a>
+      <a href="?tab=usuarios" class="<?= $tab === 'habilidades' ? 'active' : '' ?>">Habilidades</a>
     </div>
 
     <div class="tab-content">
