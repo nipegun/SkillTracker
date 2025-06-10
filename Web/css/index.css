@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  text-align: center;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.SkillTrackerLogo {
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.login-form input {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  max-width: 250px;
+  box-sizing: border-box;
+}
+
+.login-form button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
