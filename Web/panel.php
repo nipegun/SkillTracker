@@ -8,14 +8,14 @@ if (!esSuperAdmin()) {
   exit;
 }
 
-$empresas = $pdo->query("SELECT * FROM empresas")->fetchAll();
-$oficinas = $pdo->query("SELECT * FROM oficinas")->fetchAll();
+$empresas = $pdo->query("SELECT * FROM empresas ORDER BY id ASC")->fetchAll();
+$oficinas = $pdo->query("SELECT * FROM oficinas ORDER BY id ASC")->fetchAll();
 $usuarios = $pdo->query("
   SELECT u.*, e.nombre AS empresa, o.nombre AS oficina, o.ciudad AS oficina_ciudad
   FROM usuarios u
   JOIN empresas e ON u.empresa_id = e.id
-  JOIN oficinas o ON u.oficina_id = o.id
-")->fetchAll();
+  JOIN oficinas o ON u.oficina_id = o.id 
+ORDER BY id ASC")->fetchAll();
 $habilidades = $pdo->query("SELECT * FROM habilidades ORDER BY id ASC")->fetchAll();
 
 $tab = $_GET['tab'] ?? 'empresas';
