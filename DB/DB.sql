@@ -53,6 +53,7 @@ CREATE TABLE proyectos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
   descripcion TEXT,
+  estado ENUM('No iniciado', 'Iniciado', 'Pausado', 'Finalizado') NOT NULL DEFAULT 'No iniciado',
   creador_id INT NOT NULL,
   FOREIGN KEY (creador_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
