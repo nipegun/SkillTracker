@@ -28,6 +28,7 @@ $proyectos = $pdo->query("
   SELECT p.id,
          p.nombre,
          p.descripcion,
+         p.estado,
          GROUP_CONCAT(CONCAT(u.nombre, ' ', u.apellido_paterno) SEPARATOR ', ') AS participantes
   FROM proyectos p
   LEFT JOIN proyecto_usuario pu ON p.id = pu.proyecto_id
@@ -164,6 +165,15 @@ $tab = $_GET['tab'] ?? 'empresas';
           <br>
           <textarea name="descripcion" placeholder="Descripci&oacute;n"></textarea>
           <br>
+          <label>Estado:
+            <select name="estado">
+              <option value="No iniciado">No iniciado</option>
+              <option value="Iniciado">Iniciado</option>
+              <option value="Pausado">Pausado</option>
+              <option value="Finalizado">Finalizado</option>
+            </select>
+          </label>
+          <br>
           <h3>Asignar usuarios</h3>
           <?php foreach ($usuarios as $u): ?>
             <label>
@@ -180,6 +190,7 @@ $tab = $_GET['tab'] ?? 'empresas';
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripci&oacute;n</th>
+            <th>Estado</th>
             <th>Participantes</th>
           </tr>
           <?php foreach ($proyectos as $p): ?>
@@ -187,6 +198,7 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($p['id']) ?></td>
               <td><?= htmlspecialchars($p['nombre']) ?></td>
               <td><?= htmlspecialchars($p['descripcion']) ?></td>
+              <td><?= htmlspecialchars($p['estado']) ?></td>
               <td><?= htmlspecialchars($p['participantes']) ?></td>
             </tr>
           <?php endforeach; ?>

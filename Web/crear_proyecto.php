@@ -11,10 +11,11 @@ if (empty($_POST['nombre_proyecto'])) {
 
 $nombre = trim($_POST['nombre_proyecto']);
 $descripcion = trim($_POST['descripcion'] ?? '');
+$estado = $_POST['estado'] ?? 'No iniciado';
 $creador = $_SESSION['usuario_id'];
 
-$pdo->prepare("INSERT INTO proyectos (nombre, descripcion, creador_id) VALUES (?, ?, ?)")
-    ->execute([$nombre, $descripcion, $creador]);
+$pdo->prepare("INSERT INTO proyectos (nombre, descripcion, estado, creador_id) VALUES (?, ?, ?, ?)")
+    ->execute([$nombre, $descripcion, $estado, $creador]);
 $proyecto_id = $pdo->lastInsertId();
 
 if (!empty($_POST['usuarios_seleccionados'])) {
