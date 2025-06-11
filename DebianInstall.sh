@@ -86,9 +86,9 @@
           sudo apt-get -y install dialog
           echo ""
         fi
-      menu=(dialog --checklist "Mark your options with the space bar and then press Enter:" 22 96 16)
+      menu=(dialog --checklist "Mark your options with the space bar and press Enter:" 22 80 16)
         opciones=(
-          1 "Install" on
+          1 "Install"                                     off
           2 "Re-Install (Deleting previous installation)" off
         )
       choices=$("${menu[@]}" "${opciones[@]}" 2>&1 >/dev/tty)
