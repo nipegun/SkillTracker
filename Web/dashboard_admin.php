@@ -26,7 +26,12 @@ $empresas = $pdo->query(
    LEFT JOIN grupos ON empresas.grupo_id = grupos.id
    ORDER BY empresas.id ASC"
 )->fetchAll();
-$oficinas = $pdo->query("SELECT * FROM oficinas ORDER BY id ASC")->fetchAll();
+$oficinas = $pdo->query(
+  "SELECT o.id, o.nombre, o.ciudad, e.nombre AS empresa_nombre
+   FROM oficinas o
+   JOIN empresas e ON o.empresa_id = e.id
+   ORDER BY o.id ASC"
+)->fetchAll();
 $usuarios = $pdo->query("
   SELECT u.*, e.nombre AS empresa, o.nombre AS oficina, o.ciudad AS oficina_ciudad
   FROM usuarios u
@@ -164,17 +169,23 @@ $tab = $_GET['tab'] ?? 'empresas';
         <h2>Nueva oficina</h2>
         <form action="oficinas.php" method="POST">
           <input type="text" name="nombre_oficina" required placeholder="Nombre de oficina">
+          <select name="empresa_id" required>
+            <?php foreach ($empresas as $e): ?>
+              <option value="<?= $e['id'] ?>"><?= htmlspecialchars($e['nombre']) ?></option>
+            <?php endforeach; ?>
+          </select>
           <input type="text" name="ciudad" required placeholder="Ciudad">
           <button>Crear</button>
         </form>
 
         <h2>Oficinas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Ciudad</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Empresa</th><th>Ciudad</th></tr>
           <?php foreach ($oficinas as $o): ?>
             <tr>
               <td><?= htmlspecialchars($o['id']) ?></td>
               <td><?= htmlspecialchars($o['nombre']) ?></td>
+              <td><?= htmlspecialchars($o['empresa_nombre']) ?></td>
               <td><?= htmlspecialchars($o['ciudad']) ?></td>
             </tr>
           <?php endforeach; ?>

@@ -21,8 +21,10 @@ CREATE TABLE empresas (
 CREATE TABLE oficinas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
+  empresa_id INT NOT NULL,
   ciudad VARCHAR(255) NOT NULL,
-  UNIQUE(nombre, ciudad)
+  UNIQUE(nombre, ciudad),
+  FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Tabla de usuarios
@@ -84,7 +86,7 @@ INSERT INTO grupos (nombre) VALUES ('GrupoPrincipal');
 INSERT INTO empresas (nombre, grupo_id) VALUES ('EmpresaPrincipal', 1);
 
 -- Oficina inicial
-INSERT INTO oficinas (nombre, ciudad) VALUES ('OficinaCentral', 'Madrid');
+INSERT INTO oficinas (nombre, empresa_id, ciudad) VALUES ('OficinaCentral', 1, 'Madrid');
 
 -- Usuario superadmin (contraseña: admin123)
 INSERT INTO usuarios (
