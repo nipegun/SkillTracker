@@ -1,28 +1,28 @@
 # SkillTracker
 
-SkillTracker es un servicio web que permite a los miembros de una empresa consultar información acerca de qué otros miembros de la misma empresa, o de otra empresa que pertenezca al mismo grupo empresarial, tienen habilidades específicas. De esta forma, ante un nuevo proyecto, los trabajadores pueden elegir correctamente que otros compañeros de trabajo pueden formar parte del mismo, basándose únicamente en sus habilidades.
+SkillTracker is a web service that allows members of a company to look up information about which other members of the same company, or of another company within the same corporate group, possess specific skills. This way, when a new project arises, employees can correctly choose which coworkers can be part of it, based solely on their skills.
 
-## Instalación
+## Installation
 
-La forma más fácil y rápida de instalar SkillTracker en una distro Debian o derivada es ejecutar con un usuario del grupo sudo:
+The easiest and fastest way to install SkillTracker on a Debian-based distribution is to run the following command as a user in the sudo group:
 
 ```
 curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash
 ```
-...o ejecutar como root:
+...or run as root:
 
 ```
 curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
 ```
 
-## Actualización
+## Update
 
-La forma más fácil y rápida de actualizar SkillTracker ya instalado en una distro Debian o derivada es ejecutar con un usuario del grupo sudo:
+The easiest and fastest way to update an already installed instance of SkillTracker on a Debian-based distribution is to run the following command as a user in the sudo group:
 
 ```
 curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianUpdate.sh | bash
 ```
-...o ejecutar como root:
+...or run as root:
 
 ```
 curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianUpdate.sh | sed 's-sudo--g' | bash
