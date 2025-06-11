@@ -30,6 +30,6 @@ if ($stmt->fetchColumn() > 0) {
 $stmt = $pdo->prepare("INSERT INTO oficinas (nombre, ciudad) VALUES (?, ?)");
 $stmt->execute([$nombre, $ciudad]);
 
-header("Location: panel.php");
+header("Location: dashboard_admin.php");
 exit;
 ?>

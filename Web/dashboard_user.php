@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Redirigir para evitar reenvío del formulario
-  header("Location: perfil.php");
+  header("Location: dashboard_user.php");
   exit;
 }
 

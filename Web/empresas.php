@@ -24,6 +24,6 @@ if ($stmt->fetchColumn() > 0) {
 $stmt = $pdo->prepare("INSERT INTO empresas (nombre) VALUES (?)");
 $stmt->execute([$nombre]);
 
-header("Location: panel.php");
+header("Location: dashboard_admin.php");
 exit;
 ?>
