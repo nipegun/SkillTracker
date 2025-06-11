@@ -78,13 +78,13 @@ CREATE TABLE proyecto_usuario (
 -- === Datos iniciales ===
 
 -- Grupo inicial
-INSERT INTO grupos (nombre) VALUES ('Grupo Principal');
+INSERT INTO grupos (nombre) VALUES ('GrupoPrincipal');
 
 -- Empresa inicial
-INSERT INTO empresas (nombre, grupo_id) VALUES ('Empresa Principal', 1);
+INSERT INTO empresas (nombre, grupo_id) VALUES ('EmpresaPrincipal', 1);
 
 -- Oficina inicial
-INSERT INTO oficinas (nombre, ciudad) VALUES ('Oficina Central', 'Madrid');
+INSERT INTO oficinas (nombre, ciudad) VALUES ('OficinaCentral', 'Madrid');
 
 -- Usuario superadmin (contraseña: admin123)
 INSERT INTO usuarios (
