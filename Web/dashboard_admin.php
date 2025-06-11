@@ -18,6 +18,19 @@ $usuarios = $pdo->query("
 ORDER BY id ASC")->fetchAll();
 $habilidades = $pdo->query("SELECT * FROM habilidades ORDER BY id ASC")->fetchAll();
 
+// Obtener los proyectos con sus participantes
+$proyectos = $pdo->query("
+  SELECT p.id,
+         p.nombre,
+         p.descripcion,
+         GROUP_CONCAT(CONCAT(u.nombre, ' ', u.apellido_paterno) SEPARATOR ', ') AS participantes
+  FROM proyectos p
+  LEFT JOIN proyecto_usuario pu ON p.id = pu.proyecto_id
+  LEFT JOIN usuarios u ON pu.usuario_id = u.id
+  GROUP BY p.id
+  ORDER BY p.id ASC
+")->fetchAll();
+
 $tab = $_GET['tab'] ?? 'empresas';
 ?>
 <!DOCTYPE html>
@@ -41,6 +54,7 @@ $tab = $_GET['tab'] ?? 'empresas';
       <a href="?tab=oficinas" class="<?= $tab === 'oficinas' ? 'active' : '' ?>">Oficinas</a>
       <a href="?tab=usuarios" class="<?= $tab === 'usuarios' ? 'active' : '' ?>">Usuarios</a>
       <a href="?tab=habilidades" class="<?= $tab === 'habilidades' ? 'active' : '' ?>">Habilidades</a>
+      <a href="?tab=proyectos" class="<?= $tab === 'proyectos' ? 'active' : '' ?>">Proyectos</a>
     </div>
 
     <div class="tab-content">
@@ -134,6 +148,25 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($u['oficina']) ?></td>
               <td><?= htmlspecialchars($u['ciudad']) ?></td>
               <td><?= $u['es_admin'] ? 'Sí' : 'No' ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+
+      <?php elseif ($tab === 'proyectos'): ?>
+        <h2>Proyectos iniciados</h2>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Participantes</th>
+          </tr>
+          <?php foreach ($proyectos as $p): ?>
+            <tr>
+              <td><?= htmlspecialchars($p['id']) ?></td>
+              <td><?= htmlspecialchars($p['nombre']) ?></td>
+              <td><?= htmlspecialchars($p['descripcion']) ?></td>
+              <td><?= htmlspecialchars($p['participantes']) ?></td>
             </tr>
           <?php endforeach; ?>
         </table>
