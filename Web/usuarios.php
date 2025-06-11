@@ -52,6 +52,6 @@ $stmt->execute([
   isset($_POST['es_admin']) ? 1 : 0
 ]);
 
-header("Location: panel.php");
+header("Location: dashboard_admin.php");
 exit;
 ?>
