@@ -14,12 +14,6 @@
 # Remote execution as root (for systems without sudo):
 #   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
 #
-# Remote execution without cache:
-#   curl -sL -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash
-#
-# Remote execution with parameters:
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash -s Parámetro1 Parámetro2
-#
 # Download and edit the file directly in nano:
 #   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | nano -
 # ----------
