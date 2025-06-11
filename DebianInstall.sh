@@ -95,7 +95,7 @@
       menu=(dialog --checklist "Mark your options with the space bar and then press Enter:" 22 96 16)
         opciones=(
           1 "Install" on
-          2 "Re-Install (Deleting previopus installation)" off
+          2 "Re-Install (Deleting previous installation)" off
         )
       choices=$("${menu[@]}" "${opciones[@]}" 2>&1 >/dev/tty)
       #clear
@@ -202,7 +202,7 @@
             2)
 
               echo ""
-              echo "  Re-Installing SkillTracker on Debian (Deleting previopus installation)..."
+              echo "  Re-Installing SkillTracker on Debian (Deleting previous installation)..."
               echo ""
 
             ;;
