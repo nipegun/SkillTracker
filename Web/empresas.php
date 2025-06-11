@@ -6,8 +6,8 @@ requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
 // Verificar que el nombre no esté vacío
-if (empty($_POST['nombre_empresa'])) {
-  exit("El nombre de la empresa no puede estar vacío.");
+if (empty($_POST['nombre_empresa']) || empty($_POST['grupo_id'])) {
+  exit("Faltan datos obligatorios.");
 }
 
 // Limpiar y normalizar
@@ -21,8 +21,15 @@ if ($stmt->fetchColumn() > 0) {
 }
 
 // Insertar la empresa
-$stmt = $pdo->prepare("INSERT INTO empresas (nombre) VALUES (?)");
-$stmt->execute([$nombre]);
+$grupo_id = (int)$_POST['grupo_id'];
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM grupos WHERE id = ?");
+$stmt->execute([$grupo_id]);
+if ($stmt->fetchColumn() == 0) {
+  exit("Grupo no válido.");
+}
+
+$stmt = $pdo->prepare("INSERT INTO empresas (nombre, grupo_id) VALUES (?, ?)");
+$stmt->execute([$nombre, $grupo_id]);
 
 header("Location: dashboard_admin.php");
 exit;

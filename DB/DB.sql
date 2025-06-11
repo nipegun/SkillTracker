@@ -3,10 +3,18 @@ CREATE DATABASE IF NOT EXISTS SkillTracker CHARACTER SET utf8mb4 COLLATE utf8mb4
 
 USE SkillTracker;
 
+-- Tabla de grupos
+CREATE TABLE grupos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(255) NOT NULL UNIQUE
+);
+
 -- Tabla de empresas
 CREATE TABLE empresas (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(255) NOT NULL UNIQUE
+  nombre VARCHAR(255) NOT NULL UNIQUE,
+  grupo_id INT DEFAULT NULL,
+  FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- Tabla de oficinas
@@ -69,8 +77,11 @@ CREATE TABLE proyecto_usuario (
 
 -- === Datos iniciales ===
 
+-- Grupo inicial
+INSERT INTO grupos (nombre) VALUES ('Grupo Principal');
+
 -- Empresa inicial
-INSERT INTO empresas (nombre) VALUES ('Empresa Principal');
+INSERT INTO empresas (nombre, grupo_id) VALUES ('Empresa Principal', 1);
 
 -- Oficina inicial
 INSERT INTO oficinas (nombre, ciudad) VALUES ('Oficina Central', 'Madrid');
