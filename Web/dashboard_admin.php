@@ -13,7 +13,13 @@ if (!esSuperAdmin()) {
   exit;
 }
 
-$grupos = $pdo->query("SELECT * FROM grupos ORDER BY id ASC")->fetchAll();
+$grupos = $pdo->query(
+  "SELECT g.*, GROUP_CONCAT(e.nombre ORDER BY e.id ASC SEPARATOR ', ') AS empresas
+   FROM grupos g
+   LEFT JOIN empresas e ON e.grupo_id = g.id
+   GROUP BY g.id
+   ORDER BY g.id ASC"
+)->fetchAll();
 $empresas = $pdo->query(
   "SELECT empresas.*, grupos.nombre AS grupo_nombre
    FROM empresas
@@ -77,6 +83,25 @@ $tab = $_GET['tab'] ?? 'empresas';
           <input type="text" name="nombre_grupo" required>
           <button>Crear</button>
         </form>
+
+        <h2>Grupos registrados</h2>
+        <table>
+          <tr><th>ID</th><th>Nombre</th><th>Empresas</th><th>Renombrar</th></tr>
+          <?php foreach ($grupos as $g): ?>
+            <tr>
+              <td><?= htmlspecialchars($g['id']) ?></td>
+              <td><?= htmlspecialchars($g['nombre']) ?></td>
+              <td><?= htmlspecialchars($g['empresas']) ?></td>
+              <td>
+                <form action="grupos.php" method="POST">
+                  <input type="hidden" name="editar_grupo_id" value="<?= $g['id'] ?>">
+                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
+                  <button>Cambiar</button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
 
         <h2>Asignar empresas a grupos</h2>
         <?php foreach ($grupos as $g): ?>
