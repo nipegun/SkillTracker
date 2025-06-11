@@ -86,7 +86,7 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Grupos registrados</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Empresas</th><th>Renombrar</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Empresas</th><th>Renombrar</th><th>Eliminar</th></tr>
           <?php foreach ($grupos as $g): ?>
             <tr>
               <td><?= htmlspecialchars($g['id']) ?></td>
@@ -97,6 +97,12 @@ $tab = $_GET['tab'] ?? 'empresas';
                   <input type="hidden" name="editar_grupo_id" value="<?= $g['id'] ?>">
                   <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
                   <button>Cambiar</button>
+                </form>
+              </td>
+              <td>
+                <form action="grupos.php" method="POST" onsubmit="return confirm('¿Borrar grupo?');">
+                  <input type="hidden" name="eliminar_grupo_id" value="<?= $g['id'] ?>">
+                  <button>Eliminar</button>
                 </form>
               </td>
             </tr>
@@ -131,7 +137,7 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Empresas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Grupo</th><th>Renombrar</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Grupo</th><th>Renombrar</th><th>Eliminar</th></tr>
           <?php foreach ($empresas as $e): ?>
             <tr>
               <td><?= htmlspecialchars($e['id']) ?></td>
@@ -142,6 +148,12 @@ $tab = $_GET['tab'] ?? 'empresas';
                   <input type="hidden" name="editar_empresa_id" value="<?= $e['id'] ?>">
                   <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
                   <button>Cambiar</button>
+                </form>
+              </td>
+              <td>
+                <form action="empresas.php" method="POST" onsubmit="return confirm('¿Borrar empresa?');">
+                  <input type="hidden" name="eliminar_empresa_id" value="<?= $e['id'] ?>">
+                  <button>Eliminar</button>
                 </form>
               </td>
             </tr>

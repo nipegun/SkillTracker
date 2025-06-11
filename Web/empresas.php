@@ -5,6 +5,30 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+// Eliminar empresa
+if (isset($_POST['eliminar_empresa_id'])) {
+  $empresa_id = (int)$_POST['eliminar_empresa_id'];
+
+  $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE id = ?");
+  $stmt->execute([$empresa_id]);
+  if ($stmt->fetchColumn() == 0) {
+    exit("Empresa no válida.");
+  }
+
+  // Comprobar que no haya usuarios asociados
+  $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE empresa_id = ?");
+  $stmt->execute([$empresa_id]);
+  if ($stmt->fetchColumn() > 0) {
+    exit("No se puede eliminar la empresa porque tiene usuarios asociados.");
+  }
+
+  $stmt = $pdo->prepare("DELETE FROM empresas WHERE id = ?");
+  $stmt->execute([$empresa_id]);
+
+  header("Location: dashboard_admin.php?tab=empresas");
+  exit;
+}
+
 // Renombrar empresa
 if (isset($_POST['editar_empresa_id'], $_POST['nuevo_nombre'])) {
   $empresa_id = (int)$_POST['editar_empresa_id'];

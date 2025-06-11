@@ -5,6 +5,22 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+if (isset($_POST['eliminar_grupo_id'])) {
+    $grupo_id = (int)$_POST['eliminar_grupo_id'];
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM grupos WHERE id = ?");
+    $stmt->execute([$grupo_id]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Grupo no válido.");
+    }
+
+    $stmt = $pdo->prepare("DELETE FROM grupos WHERE id = ?");
+    $stmt->execute([$grupo_id]);
+
+    header("Location: dashboard_admin.php?tab=grupos");
+    exit;
+}
+
 if (isset($_POST['nombre_grupo'])) {
     $nombre = trim($_POST['nombre_grupo']);
     if ($nombre === '') {
