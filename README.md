@@ -14,3 +14,16 @@ curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/
 ```
 curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
 ```
+
+## Actualización
+
+La forma más fácil y rápida de actualizar SkillTracker ya instalado en una distro Debian o derivada es ejecutar con un usuario del grupo sudo:
+
+```
+curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianUpdate.sh | bash
+```
+...o ejecutar como root:
+
+```
+curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianUpdate.sh | sed 's-sudo--g' | bash
+```
