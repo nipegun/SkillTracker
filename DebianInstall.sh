@@ -79,92 +79,137 @@
     echo -e "${cColorBlueLight}  Starting the installation script of SkillTracker for Debian 12 (Bookworm)...${cColorEnd}"
     echo ""
 
-    # Instalar los paquetes necesarios para que el script se ejecute correctamente
-      echo ""
-      echo "    Installing all the required packages for the script to execute without errors..."
-      echo ""
-      sudo apt-get -y update
-      sudo apt-get -y install git
-      sudo apt-get -y install apache2
-      sudo apt-get -y install php
-      sudo apt-get -y install mariadb-server
-      sudo apt-get -y install php-mysql
+    # Definir fecha de ejecución del script
+      cFechaDeEjec=$(date +a%Ym%md%d@%T)
 
-    # Clonar el repo
-      echo ""
-      echo "    Cloning the Github repository..."
-      echo ""
-      sudo rm -rf /tmp/SkillTracker/
-      cd /tmp
-      git clone --depth=1 https://github.com/nipegun/SkillTracker
+    # Crear el menú
+      # Comprobar si el paquete dialog está instalado. Si no lo está, instalarlo.
+        if [[ $(dpkg-query -s dialog 2>/dev/null | grep installed) == "" ]]; then
+          echo ""
+          echo -e "${cColorRojo}    The dialog package is not installed. Starting installation...${cFinColor}"
+          echo ""
+          sudo apt-get -y update
+          sudo apt-get -y install dialog
+          echo ""
+        fi
+      menu=(dialog --checklist "Mark your options with the space bar and then press Enter:" 22 96 16)
+        opciones=(
+          1 "Install" on
+          2 "Re-Install (Deleting previopus installation)" off
+        )
+      choices=$("${menu[@]}" "${opciones[@]}" 2>&1 >/dev/tty)
+      #clear
 
-    # Cambiar la contraseña del usuario root de MariaDB
-      sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd'; FLUSH PRIVILEGES;"
+      for choice in $choices
+        do
+          case $choice in
 
-    # Erase the previous database
-      echo ""
-      echo "    Erasing the previous database..."
-      echo ""
-      sudo mysql -u root -pP@ssw0rd -e "DROP DATABASE SkillTracker;"
+            1)
 
-    # Create the user and the database
-      echo ""
-      echo "    Creating the database & user..."
-      echo ""
-      mysql -uroot -pP@ssw0rd -e "CREATE DATABASE SkillTracker; CREATE USER 'SkillTracker'@'localhost' IDENTIFIED BY 'P@ssw0rd'; GRANT ALL PRIVILEGES ON SkillTracker.* TO 'SkillTracker'@'localhost'; FLUSH PRIVILEGES;"
+              echo ""
+              echo "  Installing SkillTracker on Debian..."
+              echo ""
 
-    # Create the new database
-      echo ""
-      echo "    Importing the new database..."
-      echo ""
-      cd /tmp/SkillTracker/DB/
-      sudo chmod +x /tmp/SkillTracker/DB/ImportDB.sh
-      ./ImportDB.sh
+              # Instalar los paquetes necesarios para que el script se ejecute correctamente
+                echo ""
+                echo "    Installing all the required packages for the script to execute without errors..."
+                echo ""
+                sudo apt-get -y update
+                sudo apt-get -y install git
+                sudo apt-get -y install apache2
+                sudo apt-get -y install php
+                sudo apt-get -y install mariadb-server
+                sudo apt-get -y install php-mysql
 
-    # Deshabilitar el sitio por defecto
-      echo ""
-      echo "    Deshabilitando el sitio por defecto de Apache2..."
-      echo ""
-      sudo a2dissite 000-default
-      sudo systemctl reload apache2
+              # Clonar el repo
+                echo ""
+                echo "    Cloning the Github repository..."
+                echo ""
+                sudo rm -rf /tmp/SkillTracker/
+                cd /tmp
+                git clone --depth=1 https://github.com/nipegun/SkillTracker
 
-    # Configurar el servidor web
-      echo ""
-      echo "    Configurando el servidor web..."
-      echo ""
-      echo "<VirtualHost *:80>"                                           | sudo tee    /etc/apache2/sites-available/SkillTracker.conf
-      echo "  ServerAdmin webmaster@localhost"                            | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
-      echo "  DocumentRoot /var/www/SkillTracker"                         | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
-      echo "  ErrorLog     /var/www/SkillTrackerLogs/error.log"           | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
-      echo "  CustomLog    /var/www/SkillTrackerLogs/access.log combined" | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
-      echo "</VirtualHost>"                                               | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+              # Cambiar la contraseña del usuario root de MariaDB
+                sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'P@ssw0rd'; FLUSH PRIVILEGES;"
 
-    # Copiando archivos de la web
-      echo ""
-      echo "    Copiando archivos de la web..."
-      echo ""
-      sudo rm -rf   /var/www/SkillTracker/
-      sudo rm -rf   /var/www/SkillTrackerLogs/
-      sudo mkdir -p /var/www/SkillTracker/
-      sudo mkdir -p /var/www/SkillTrackerLogs/
-      sudo cp -vr /tmp/SkillTracker/Web/* /var/www/SkillTracker/
-      # Reparar permisos
-        echo ""
-        echo "      Reparando permisos..."
-        echo ""
-        sudo chown www-data:www-data /var/www/ -Rv
+              # Erase the previous database
+                echo ""
+                echo "    Erasing the previous database..."
+                echo ""
+                sudo mysql -u root -pP@ssw0rd -e "DROP DATABASE SkillTracker;"
 
-    # Activar la web
-      echo ""
-      echo "  Activating SkillTracker web on apache2..."
-      echo ""
-      sudo a2ensite SkillTracker
-      sudo systemctl reload apache2
+              # Create the user and the database
+                echo ""
+                echo "    Creating the database & user..."
+                echo ""
+                mysql -uroot -pP@ssw0rd -e "CREATE DATABASE SkillTracker; CREATE USER 'SkillTracker'@'localhost' IDENTIFIED BY 'P@ssw0rd'; GRANT ALL PRIVILEGES ON SkillTracker.* TO 'SkillTracker'@'localhost'; FLUSH PRIVILEGES;"
 
-    # Notificar fin de ejecución del script
-      echo ""
-      echo "    Instalation script, ended."
-      echo ""
+              # Create the new database
+                echo ""
+                echo "    Importing the new database..."
+                echo ""
+                cd /tmp/SkillTracker/DB/
+                sudo chmod +x /tmp/SkillTracker/DB/ImportDB.sh
+                ./ImportDB.sh
+
+              # Deshabilitar el sitio por defecto
+                echo ""
+                echo "    Deshabilitando el sitio por defecto de Apache2..."
+                echo ""
+                sudo a2dissite 000-default
+                sudo systemctl reload apache2
+
+              # Configurar el servidor web
+                echo ""
+                echo "    Configurando el servidor web..."
+                echo ""
+                echo "<VirtualHost *:80>"                                           | sudo tee    /etc/apache2/sites-available/SkillTracker.conf
+                echo "  ServerAdmin webmaster@localhost"                            | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+                echo "  DocumentRoot /var/www/SkillTracker"                         | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+                echo "  ErrorLog     /var/www/SkillTrackerLogs/error.log"           | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+                echo "  CustomLog    /var/www/SkillTrackerLogs/access.log combined" | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+                echo "</VirtualHost>"                                               | sudo tee -a /etc/apache2/sites-available/SkillTracker.conf
+
+              # Copiando archivos de la web
+                echo ""
+                echo "    Copiando archivos de la web..."
+                echo ""
+                sudo rm -rf   /var/www/SkillTracker/
+                sudo rm -rf   /var/www/SkillTrackerLogs/
+                sudo mkdir -p /var/www/SkillTracker/
+                sudo mkdir -p /var/www/SkillTrackerLogs/
+                sudo cp -vr /tmp/SkillTracker/Web/* /var/www/SkillTracker/
+                # Reparar permisos
+                  echo ""
+                  echo "      Reparando permisos..."
+                  echo ""
+                  sudo chown www-data:www-data /var/www/ -Rv
+
+              # Activar la web
+                echo ""
+                echo "  Activating SkillTracker web on apache2..."
+                echo ""
+                sudo a2ensite SkillTracker
+                sudo systemctl reload apache2
+
+              # Notificar fin de ejecución del script
+                echo ""
+                echo "    Instalation script, ended."
+                echo ""
+
+            ;;
+
+            2)
+
+              echo ""
+              echo "  Re-Installing SkillTracker on Debian (Deleting previopus installation)..."
+              echo ""
+
+            ;;
+
+        esac
+
+    done
 
   elif [ $cOSVersion == "11" ]; then
 
