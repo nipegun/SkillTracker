@@ -40,11 +40,14 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
   <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-  <div class="logout-link">
-    <a href="logout.php">Cerrar sesión</a>
+  <div class="top-bar">
+    <img src="/images/SkillTrackerLogo.png" alt="Logo SkillTracker">
+    <a href="logout.php" class="logout-button">Cerrar sesión</a>
   </div>
-  <h1>Panel del usuario</h1>
-  <form method="POST">
+
+  <div class="main-content">
+    <h1>Panel del usuario</h1>
+    <form method="POST">
     <?php foreach ($habilidades as $hab): ?>
       <label>
         <input type="checkbox" name="habilidades[]" value="<?= $hab['id'] ?>"
@@ -52,7 +55,8 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
         <?= htmlspecialchars($hab['nombre']) ?>
       </label><br>
     <?php endforeach; ?>
-    <button type="submit">Actualizar</button>
-  </form>
+      <button type="submit">Actualizar</button>
+    </form>
+  </div>
 </body>
 </html>
