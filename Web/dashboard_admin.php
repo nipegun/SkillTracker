@@ -131,12 +131,19 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Empresas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Grupo</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Grupo</th><th>Renombrar</th></tr>
           <?php foreach ($empresas as $e): ?>
             <tr>
               <td><?= htmlspecialchars($e['id']) ?></td>
               <td><?= htmlspecialchars($e['nombre']) ?></td>
               <td><?= htmlspecialchars($e['grupo_nombre']) ?></td>
+              <td>
+                <form action="empresas.php" method="POST">
+                  <input type="hidden" name="editar_empresa_id" value="<?= $e['id'] ?>">
+                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
+                  <button>Cambiar</button>
+                </form>
+              </td>
             </tr>
           <?php endforeach; ?>
         </table>
