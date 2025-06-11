@@ -13,7 +13,13 @@ if (!esSuperAdmin()) {
   exit;
 }
 
-$empresas = $pdo->query("SELECT * FROM empresas ORDER BY id ASC")->fetchAll();
+$grupos = $pdo->query("SELECT * FROM grupos ORDER BY id ASC")->fetchAll();
+$empresas = $pdo->query(
+  "SELECT empresas.*, grupos.nombre AS grupo_nombre
+   FROM empresas
+   LEFT JOIN grupos ON empresas.grupo_id = grupos.id
+   ORDER BY empresas.id ASC"
+)->fetchAll();
 $oficinas = $pdo->query("SELECT * FROM oficinas ORDER BY id ASC")->fetchAll();
 $usuarios = $pdo->query("
   SELECT u.*, e.nombre AS empresa, o.nombre AS oficina, o.ciudad AS oficina_ciudad
@@ -56,6 +62,7 @@ $tab = $_GET['tab'] ?? 'empresas';
     <h1>Panel del admin</h1>
 
     <div class="tabs">
+      <a href="?tab=grupos" class="<?= $tab === 'grupos' ? 'active' : '' ?>">Grupos</a>
       <a href="?tab=empresas" class="<?= $tab === 'empresas' ? 'active' : '' ?>">Empresas</a>
       <a href="?tab=oficinas" class="<?= $tab === 'oficinas' ? 'active' : '' ?>">Oficinas</a>
       <a href="?tab=usuarios" class="<?= $tab === 'usuarios' ? 'active' : '' ?>">Usuarios</a>
@@ -64,20 +71,47 @@ $tab = $_GET['tab'] ?? 'empresas';
     </div>
 
     <div class="tab-content">
-      <?php if ($tab === 'empresas'): ?>
+      <?php if ($tab === 'grupos'): ?>
+        <h2>Nuevo grupo</h2>
+        <form action="grupos.php" method="POST">
+          <input type="text" name="nombre_grupo" required>
+          <button>Crear</button>
+        </form>
+
+        <h2>Asignar empresas a grupos</h2>
+        <?php foreach ($grupos as $g): ?>
+          <h3><?= htmlspecialchars($g['nombre']) ?></h3>
+          <form action="grupos.php" method="POST">
+            <input type="hidden" name="grupo_id" value="<?= $g['id'] ?>">
+            <select name="empresa_id">
+              <?php foreach ($empresas as $e): ?>
+                <option value="<?= $e['id'] ?>" <?= $e['grupo_id'] == $g['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button>Asignar</button>
+          </form>
+        <?php endforeach; ?>
+
+      <?php elseif ($tab === 'empresas'): ?>
         <h2>Nueva empresa</h2>
         <form action="empresas.php" method="POST">
           <input type="text" name="nombre_empresa" required>
+          <select name="grupo_id" required>
+            <?php foreach ($grupos as $g): ?>
+              <option value="<?= $g['id'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
+            <?php endforeach; ?>
+          </select>
           <button>Crear</button>
         </form>
 
         <h2>Empresas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Grupo</th></tr>
           <?php foreach ($empresas as $e): ?>
             <tr>
               <td><?= htmlspecialchars($e['id']) ?></td>
               <td><?= htmlspecialchars($e['nombre']) ?></td>
+              <td><?= htmlspecialchars($e['grupo_nombre']) ?></td>
             </tr>
           <?php endforeach; ?>
         </table>
