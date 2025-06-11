@@ -158,12 +158,28 @@ $tab = $_GET['tab'] ?? 'empresas';
         </table>
 
       <?php elseif ($tab === 'proyectos'): ?>
+        <h2>Nuevo proyecto</h2>
+        <form action="crear_proyecto.php" method="POST">
+          <input type="text" name="nombre_proyecto" required placeholder="Nombre del proyecto">
+          <br>
+          <textarea name="descripcion" placeholder="Descripci&oacute;n"></textarea>
+          <br>
+          <h3>Asignar usuarios</h3>
+          <?php foreach ($usuarios as $u): ?>
+            <label>
+              <input type="checkbox" name="usuarios_seleccionados[]" value="<?= $u['id'] ?>">
+              <?= htmlspecialchars($u['nombre'] . ' ' . $u['apellido_paterno']) ?> (<?= htmlspecialchars($u['email']) ?>)
+            </label><br>
+          <?php endforeach; ?>
+          <button>Crear</button>
+        </form>
+
         <h2>Proyectos iniciados</h2>
         <table>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Descripción</th>
+            <th>Descripci&oacute;n</th>
             <th>Participantes</th>
           </tr>
           <?php foreach ($proyectos as $p): ?>
