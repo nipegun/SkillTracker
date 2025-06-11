@@ -47,6 +47,24 @@ CREATE TABLE usuario_habilidad (
   FOREIGN KEY (habilidad_id) REFERENCES habilidades(id) ON DELETE CASCADE
 );
 
+-- Tabla de proyectos
+CREATE TABLE proyectos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  creador_id INT NOT NULL,
+  FOREIGN KEY (creador_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Tabla de relación proyectos ↔ usuarios
+CREATE TABLE proyecto_usuario (
+  proyecto_id INT NOT NULL,
+  usuario_id INT NOT NULL,
+  PRIMARY KEY (proyecto_id, usuario_id),
+  FOREIGN KEY (proyecto_id) REFERENCES proyectos(id) ON DELETE CASCADE,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
 -- === Datos iniciales ===
 
 -- Empresa inicial
