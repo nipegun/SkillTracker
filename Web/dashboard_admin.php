@@ -134,7 +134,7 @@ $tab = $_GET['tab'] ?? 'empresas';
             <tr>
               <td><?= htmlspecialchars($e['id']) ?></td>
               <td><?= htmlspecialchars($e['nombre']) ?></td>
-              <td><?= htmlspecialchars($e['grupo_nombre'] ?? 'Ninguno') ?></td>
+              <td><?= htmlspecialchars($e['grupo_nombre'] ?? '-') ?></td>
               <td>
                 <form action="empresas.php" method="POST">
                   <input type="hidden" name="editar_empresa_id" value="<?= $e['id'] ?>">
