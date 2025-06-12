@@ -114,20 +114,6 @@ $tab = $_GET['tab'] ?? 'empresas';
           <?php endforeach; ?>
         </table>
 
-        <h2>Asignar empresas a grupos</h2>
-        <?php foreach ($grupos as $g): ?>
-          <h3><?= htmlspecialchars($g['nombre']) ?></h3>
-          <form action="grupos.php" method="POST">
-            <input type="hidden" name="grupo_id" value="<?= $g['id'] ?>">
-            <select name="empresa_id">
-              <?php foreach ($empresas as $e): ?>
-                <option value="<?= $e['id'] ?>" <?= $e['grupo_id'] == $g['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
-              <?php endforeach; ?>
-            </select>
-            <button>Asignar</button>
-          </form>
-        <?php endforeach; ?>
-
       <?php elseif ($tab === 'empresas'): ?>
         <h2>Nueva empresa</h2>
         <form action="empresas.php" method="POST">
@@ -273,7 +259,7 @@ $tab = $_GET['tab'] ?? 'empresas';
           <button>Crear</button>
         </form>
 
-        <h2>Proyectos iniciados</h2>
+        <h2>Proyectos registrados</h2>
         <table>
           <tr>
             <th>ID</th>
