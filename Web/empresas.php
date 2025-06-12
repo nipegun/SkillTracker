@@ -58,7 +58,7 @@ if (isset($_POST['editar_empresa_id'], $_POST['nuevo_nombre'])) {
 }
 
 // Crear nueva empresa
-if (empty($_POST['nombre_empresa']) || empty($_POST['grupo_id'])) {
+if (empty($_POST['nombre_empresa'])) {
   exit("Faltan datos obligatorios.");
 }
 
@@ -70,11 +70,15 @@ if ($stmt->fetchColumn() > 0) {
   exit("Ya existe una empresa con ese nombre.");
 }
 
-$grupo_id = (int)$_POST['grupo_id'];
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM grupos WHERE id = ?");
-$stmt->execute([$grupo_id]);
-if ($stmt->fetchColumn() == 0) {
-  exit("Grupo no válido.");
+
+$grupo_id = null;
+if (isset($_POST['grupo_id']) && $_POST['grupo_id'] !== '') {
+  $grupo_id = (int)$_POST['grupo_id'];
+  $stmt = $pdo->prepare("SELECT COUNT(*) FROM grupos WHERE id = ?");
+  $stmt->execute([$grupo_id]);
+  if ($stmt->fetchColumn() == 0) {
+    exit("Grupo no válido.");
+  }
 }
 
 $stmt = $pdo->prepare("INSERT INTO empresas (nombre, grupo_id) VALUES (?, ?)");
