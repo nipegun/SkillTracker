@@ -5,6 +5,46 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+// ---- Eliminar proyecto ----
+if (isset($_POST['eliminar_proyecto_id'])) {
+    $pid = (int)$_POST['eliminar_proyecto_id'];
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM proyectos WHERE id = ?");
+    $stmt->execute([$pid]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Proyecto no válido.");
+    }
+
+    $stmt = $pdo->prepare("DELETE FROM proyectos WHERE id = ?");
+    $stmt->execute([$pid]);
+
+    header("Location: dashboard_admin.php?tab=proyectos");
+    exit;
+}
+
+// ---- Renombrar proyecto ----
+if (isset($_POST['editar_proyecto_id'], $_POST['nuevo_nombre'])) {
+    $pid = (int)$_POST['editar_proyecto_id'];
+    $nuevo = trim($_POST['nuevo_nombre']);
+
+    if ($nuevo === '') {
+        exit("El nombre del proyecto no puede estar vacío.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM proyectos WHERE id = ?");
+    $stmt->execute([$pid]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Proyecto no válido.");
+    }
+
+    $stmt = $pdo->prepare("UPDATE proyectos SET nombre = ? WHERE id = ?");
+    $stmt->execute([$nuevo, $pid]);
+
+    header("Location: dashboard_admin.php?tab=proyectos");
+    exit;
+}
+
+// ---- Crear nuevo proyecto ----
 if (empty($_POST['nombre_proyecto'])) {
     exit("El nombre del proyecto es obligatorio.");
 }

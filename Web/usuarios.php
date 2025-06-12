@@ -5,7 +5,46 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
-// Validaciones mínimas
+// ---- Eliminar usuario ----
+if (isset($_POST['eliminar_usuario_id'])) {
+    $uid = (int)$_POST['eliminar_usuario_id'];
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE id = ?");
+    $stmt->execute([$uid]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Usuario no válido.");
+    }
+
+    $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
+    $stmt->execute([$uid]);
+
+    header("Location: dashboard_admin.php?tab=usuarios");
+    exit;
+}
+
+// ---- Renombrar usuario (solo nombre) ----
+if (isset($_POST['editar_usuario_id'], $_POST['nuevo_nombre'])) {
+    $uid = (int)$_POST['editar_usuario_id'];
+    $nuevo = trim($_POST['nuevo_nombre']);
+
+    if ($nuevo === '') {
+        exit("El nombre no puede estar vacío.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE id = ?");
+    $stmt->execute([$uid]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Usuario no válido.");
+    }
+
+    $stmt = $pdo->prepare("UPDATE usuarios SET nombre = ? WHERE id = ?");
+    $stmt->execute([$nuevo, $uid]);
+
+    header("Location: dashboard_admin.php?tab=usuarios");
+    exit;
+}
+
+// ---- Crear nuevo usuario ----
 if (
   empty($_POST['nombre']) ||
   empty($_POST['apellido_paterno']) ||
@@ -54,6 +93,6 @@ $stmt->execute([
   isset($_POST['es_admin']) ? 1 : 0
 ]);
 
-header("Location: dashboard_admin.php");
+header("Location: dashboard_admin.php?tab=usuarios");
 exit;
 ?>
