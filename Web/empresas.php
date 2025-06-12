@@ -5,6 +5,43 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+// Actualizar empresa completa
+if (isset($_POST['actualizar_empresa_id'])) {
+  $empresa_id = (int)$_POST['actualizar_empresa_id'];
+  $nombre = trim($_POST['nombre_empresa']);
+  $grupo_id = $_POST['grupo_id'] !== '' ? (int)$_POST['grupo_id'] : null;
+
+  if ($nombre === '') {
+    exit("El nombre de la empresa no puede estar vacío.");
+  }
+
+  $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE id = ?");
+  $stmt->execute([$empresa_id]);
+  if ($stmt->fetchColumn() == 0) {
+    exit("Empresa no válida.");
+  }
+
+  $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE nombre = ? AND id != ?");
+  $stmt->execute([$nombre, $empresa_id]);
+  if ($stmt->fetchColumn() > 0) {
+    exit("Ya existe una empresa con ese nombre.");
+  }
+
+  if ($grupo_id !== null) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM grupos WHERE id = ?");
+    $stmt->execute([$grupo_id]);
+    if ($stmt->fetchColumn() == 0) {
+      exit("Grupo no válido.");
+    }
+  }
+
+  $stmt = $pdo->prepare("UPDATE empresas SET nombre = ?, grupo_id = ? WHERE id = ?");
+  $stmt->execute([$nombre, $grupo_id, $empresa_id]);
+
+  header("Location: dashboard_admin.php?tab=empresas");
+  exit;
+}
+
 // Eliminar empresa
 if (isset($_POST['eliminar_empresa_id'])) {
   $empresa_id = (int)$_POST['eliminar_empresa_id'];

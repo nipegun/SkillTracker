@@ -5,6 +5,41 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+// ---- Actualizar proyecto ----
+if (isset($_POST['actualizar_proyecto_id'])) {
+    $pid = (int)$_POST['actualizar_proyecto_id'];
+
+    if (empty($_POST['nombre_proyecto'])) {
+        exit("El nombre del proyecto es obligatorio.");
+    }
+
+    $nombre = trim($_POST['nombre_proyecto']);
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $estado = $_POST['estado'] ?? 'No iniciado';
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM proyectos WHERE id = ?");
+    $stmt->execute([$pid]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Proyecto no válido.");
+    }
+
+    $pdo->prepare("UPDATE proyectos SET nombre = ?, descripcion = ?, estado = ? WHERE id = ?")
+        ->execute([$nombre, $descripcion, $estado, $pid]);
+
+    // Actualizar participantes
+    $pdo->prepare("DELETE FROM proyecto_usuario WHERE proyecto_id = ?")
+        ->execute([$pid]);
+    if (!empty($_POST['usuarios_seleccionados'])) {
+        $stmt = $pdo->prepare("INSERT INTO proyecto_usuario (proyecto_id, usuario_id) VALUES (?, ?)");
+        foreach ($_POST['usuarios_seleccionados'] as $uid) {
+            $stmt->execute([$pid, $uid]);
+        }
+    }
+
+    header("Location: dashboard_admin.php?tab=proyectos");
+    exit;
+}
+
 // ---- Eliminar proyecto ----
 if (isset($_POST['eliminar_proyecto_id'])) {
     $pid = (int)$_POST['eliminar_proyecto_id'];
