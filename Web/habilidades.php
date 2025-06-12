@@ -5,6 +5,34 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+// ---- Actualizar habilidad ----
+if (isset($_POST['actualizar_habilidad_id'])) {
+    $hid = (int)$_POST['actualizar_habilidad_id'];
+    $nombre = trim($_POST['nombre_habilidad']);
+
+    if ($nombre === '') {
+        exit("El nombre de la habilidad no puede estar vacío.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM habilidades WHERE id = ?");
+    $stmt->execute([$hid]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Habilidad no válida.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM habilidades WHERE nombre = ? AND id != ?");
+    $stmt->execute([$nombre, $hid]);
+    if ($stmt->fetchColumn() > 0) {
+        exit("Ya existe una habilidad con ese nombre.");
+    }
+
+    $stmt = $pdo->prepare("UPDATE habilidades SET nombre = ? WHERE id = ?");
+    $stmt->execute([$nombre, $hid]);
+
+    header("Location: dashboard_admin.php?tab=habilidades");
+    exit;
+}
+
 // ---- Eliminar habilidad ----
 if (isset($_POST['eliminar_habilidad_id'])) {
     $hid = (int)$_POST['eliminar_habilidad_id'];

@@ -91,17 +91,17 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Grupos registrados</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Empresas</th><th>Renombrar</th><th>Eliminar</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Empresas</th><th>Modificar</th><th>Eliminar</th></tr>
           <?php foreach ($grupos as $g): ?>
             <tr>
               <td><?= htmlspecialchars($g['id']) ?></td>
               <td><?= htmlspecialchars($g['nombre']) ?></td>
               <td><?= htmlspecialchars($g['empresas']) ?></td>
               <td>
-                <form action="grupos.php" method="POST">
-                  <input type="hidden" name="editar_grupo_id" value="<?= $g['id'] ?>">
-                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
-                  <button>Cambiar</button>
+                <form method="GET" action="dashboard_admin.php">
+                  <input type="hidden" name="tab" value="grupos">
+                  <input type="hidden" name="edit_grupo_id" value="<?= $g['id'] ?>">
+                  <button>Modificar</button>
                 </form>
               </td>
               <td>
@@ -113,6 +113,20 @@ $tab = $_GET['tab'] ?? 'empresas';
             </tr>
           <?php endforeach; ?>
         </table>
+
+        <?php if (isset($_GET['edit_grupo_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM grupos WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_grupo_id']]);
+              $grupoEditar = $stmt->fetch();
+              if ($grupoEditar): ?>
+          <h3>Editar grupo</h3>
+          <form action="grupos.php" method="POST">
+            <input type="hidden" name="editar_grupo_id" value="<?= $grupoEditar['id'] ?>">
+            <input type="text" name="nuevo_nombre" required value="<?= htmlspecialchars($grupoEditar['nombre']) ?>">
+            <button>Guardar</button>
+            <a href="dashboard_admin.php?tab=grupos">Cancelar</a>
+          </form>
+        <?php endif; endif; ?>
 
       <?php elseif ($tab === 'empresas'): ?>
         <h2>Nueva empresa</h2>
@@ -129,17 +143,17 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Empresas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Grupo</th><th>Renombrar</th><th>Eliminar</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Grupo</th><th>Modificar</th><th>Eliminar</th></tr>
           <?php foreach ($empresas as $e): ?>
             <tr>
               <td><?= htmlspecialchars($e['id']) ?></td>
               <td><?= htmlspecialchars($e['nombre']) ?></td>
               <td><?= htmlspecialchars($e['grupo_nombre'] ?? '-') ?></td>
               <td>
-                <form action="empresas.php" method="POST">
-                  <input type="hidden" name="editar_empresa_id" value="<?= $e['id'] ?>">
-                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
-                  <button>Cambiar</button>
+                <form method="GET" action="dashboard_admin.php">
+                  <input type="hidden" name="tab" value="empresas">
+                  <input type="hidden" name="edit_empresa_id" value="<?= $e['id'] ?>">
+                  <button>Modificar</button>
                 </form>
               </td>
               <td>
@@ -151,6 +165,26 @@ $tab = $_GET['tab'] ?? 'empresas';
             </tr>
           <?php endforeach; ?>
         </table>
+
+        <?php if (isset($_GET['edit_empresa_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM empresas WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_empresa_id']]);
+              $empresaEditar = $stmt->fetch();
+              if ($empresaEditar): ?>
+          <h3>Editar empresa</h3>
+          <form action="empresas.php" method="POST">
+            <input type="hidden" name="actualizar_empresa_id" value="<?= $empresaEditar['id'] ?>">
+            <input type="text" name="nombre_empresa" required value="<?= htmlspecialchars($empresaEditar['nombre']) ?>">
+            <select name="grupo_id">
+              <option value="">-</option>
+              <?php foreach ($grupos as $g): ?>
+                <option value="<?= $g['id'] ?>" <?= $empresaEditar['grupo_id']==$g['id'] ? 'selected' : '' ?>><?= htmlspecialchars($g['nombre']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button>Guardar</button>
+            <a href="dashboard_admin.php?tab=empresas">Cancelar</a>
+          </form>
+        <?php endif; endif; ?>
 
       <?php elseif ($tab === 'oficinas'): ?>
         <h2>Nueva oficina</h2>
@@ -167,7 +201,7 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Oficinas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Empresa</th><th>Ciudad</th><th>Renombrar</th><th>Eliminar</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Empresa</th><th>Ciudad</th><th>Modificar</th><th>Eliminar</th></tr>
           <?php foreach ($oficinas as $o): ?>
             <tr>
               <td><?= htmlspecialchars($o['id']) ?></td>
@@ -175,10 +209,10 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($o['empresa_nombre']) ?></td>
               <td><?= htmlspecialchars($o['ciudad']) ?></td>
               <td>
-                <form action="oficinas.php" method="POST">
-                  <input type="hidden" name="editar_oficina_id" value="<?= $o['id'] ?>">
-                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
-                  <button>Cambiar</button>
+                <form method="GET" action="dashboard_admin.php">
+                  <input type="hidden" name="tab" value="oficinas">
+                  <input type="hidden" name="edit_oficina_id" value="<?= $o['id'] ?>">
+                  <button>Modificar</button>
                 </form>
               </td>
               <td>
@@ -190,6 +224,26 @@ $tab = $_GET['tab'] ?? 'empresas';
             </tr>
           <?php endforeach; ?>
         </table>
+
+        <?php if (isset($_GET['edit_oficina_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM oficinas WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_oficina_id']]);
+              $oficinaEditar = $stmt->fetch();
+              if ($oficinaEditar): ?>
+          <h3>Editar oficina</h3>
+          <form action="oficinas.php" method="POST">
+            <input type="hidden" name="actualizar_oficina_id" value="<?= $oficinaEditar['id'] ?>">
+            <input type="text" name="nombre_oficina" required value="<?= htmlspecialchars($oficinaEditar['nombre']) ?>">
+            <select name="empresa_id" required>
+              <?php foreach ($empresas as $e): ?>
+                <option value="<?= $e['id'] ?>" <?= $oficinaEditar['empresa_id']==$e['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <input type="text" name="ciudad" required value="<?= htmlspecialchars($oficinaEditar['ciudad']) ?>">
+            <button>Guardar</button>
+            <a href="dashboard_admin.php?tab=oficinas">Cancelar</a>
+          </form>
+        <?php endif; endif; ?>
 
       <?php elseif ($tab === 'usuarios'): ?>
         <h2>Nuevo usuario</h2>
@@ -233,7 +287,7 @@ $tab = $_GET['tab'] ?? 'empresas';
             <th>Oficina</th>
             <th>Ciudad</th>
             <th>Es admin</th>
-            <th>Renombrar</th>
+            <th>Modificar</th>
             <th>Eliminar</th>
           </tr>
           <?php foreach ($usuarios as $u): ?>
@@ -246,10 +300,10 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($u['ciudad']) ?></td>
               <td><?= $u['es_admin'] ? 'Sí' : 'No' ?></td>
               <td>
-                <form action="usuarios.php" method="POST">
-                  <input type="hidden" name="editar_usuario_id" value="<?= $u['id'] ?>">
-                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
-                  <button>Cambiar</button>
+                <form method="GET" action="dashboard_admin.php">
+                  <input type="hidden" name="tab" value="usuarios">
+                  <input type="hidden" name="edit_usuario_id" value="<?= $u['id'] ?>">
+                  <button>Modificar</button>
                 </form>
               </td>
               <td>
@@ -261,6 +315,40 @@ $tab = $_GET['tab'] ?? 'empresas';
             </tr>
           <?php endforeach; ?>
         </table>
+
+        <?php if (isset($_GET['edit_usuario_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_usuario_id']]);
+              $usuarioEditar = $stmt->fetch();
+              if ($usuarioEditar): ?>
+          <h3>Editar usuario</h3>
+          <form action="usuarios.php" method="POST">
+            <input type="hidden" name="actualizar_usuario_id" value="<?= $usuarioEditar['id'] ?>">
+            <input name="nombre" required value="<?= htmlspecialchars($usuarioEditar['nombre']) ?>">
+            <input name="apellido_paterno" required value="<?= htmlspecialchars($usuarioEditar['apellido_paterno']) ?>">
+            <input name="apellido_materno" value="<?= htmlspecialchars($usuarioEditar['apellido_materno']) ?>">
+            <br>
+            <input name="email" type="email" required value="<?= htmlspecialchars($usuarioEditar['email']) ?>">
+            <br>
+            <input name="password" type="password" placeholder="Nueva contraseña">
+            <select name="empresa_id" required>
+              <?php foreach ($empresas as $e): ?>
+                <option value="<?= $e['id'] ?>" <?= $usuarioEditar['empresa_id']==$e['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <select name="oficina_id" required>
+              <?php foreach ($oficinas as $o): ?>
+                <option value="<?= $o['id'] ?>" <?= $usuarioEditar['oficina_id']==$o['id'] ? 'selected' : '' ?>><?= htmlspecialchars($o['nombre']) ?> (<?= htmlspecialchars($o['ciudad']) ?>)</option>
+              <?php endforeach; ?>
+            </select>
+            <input name="ciudad" required value="<?= htmlspecialchars($usuarioEditar['ciudad']) ?>">
+            <br>
+            <label><input type="checkbox" name="es_admin" <?= $usuarioEditar['es_admin'] ? 'checked' : '' ?>> Es admin</label>
+            <br>
+            <button>Guardar</button>
+            <a href="dashboard_admin.php?tab=usuarios">Cancelar</a>
+          </form>
+        <?php endif; endif; ?>
 
       <?php elseif ($tab === 'proyectos'): ?>
         <h2>Nuevo proyecto</h2>
@@ -296,7 +384,7 @@ $tab = $_GET['tab'] ?? 'empresas';
             <th>Descripci&oacute;n</th>
             <th>Estado</th>
             <th>Participantes</th>
-            <th>Renombrar</th>
+            <th>Modificar</th>
             <th>Eliminar</th>
           </tr>
           <?php foreach ($proyectos as $p): ?>
@@ -307,10 +395,10 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($p['estado']) ?></td>
               <td><?= htmlspecialchars($p['participantes']) ?></td>
               <td>
-                <form action="crear_proyecto.php" method="POST">
-                  <input type="hidden" name="editar_proyecto_id" value="<?= $p['id'] ?>">
-                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
-                  <button>Cambiar</button>
+                <form method="GET" action="dashboard_admin.php">
+                  <input type="hidden" name="tab" value="proyectos">
+                  <input type="hidden" name="edit_proyecto_id" value="<?= $p['id'] ?>">
+                  <button>Modificar</button>
                 </form>
               </td>
               <td>
@@ -323,6 +411,43 @@ $tab = $_GET['tab'] ?? 'empresas';
           <?php endforeach; ?>
         </table>
 
+        <?php if (isset($_GET['edit_proyecto_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM proyectos WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_proyecto_id']]);
+              $proyectoEditar = $stmt->fetch();
+              if ($proyectoEditar):
+                // obtener participantes actuales
+                $stmt = $pdo->prepare("SELECT usuario_id FROM proyecto_usuario WHERE proyecto_id = ?");
+                $stmt->execute([$proyectoEditar['id']]);
+                $participantesActuales = array_column($stmt->fetchAll(), 'usuario_id'); ?>
+          <h3>Editar proyecto</h3>
+          <form action="crear_proyecto.php" method="POST">
+            <input type="hidden" name="actualizar_proyecto_id" value="<?= $proyectoEditar['id'] ?>">
+            <input type="text" name="nombre_proyecto" required value="<?= htmlspecialchars($proyectoEditar['nombre']) ?>">
+            <br>
+            <textarea name="descripcion"><?= htmlspecialchars($proyectoEditar['descripcion']) ?></textarea>
+            <br>
+            <label>Estado:
+              <select name="estado">
+                <option value="No iniciado" <?= $proyectoEditar['estado']=='No iniciado'?'selected':'' ?>>No iniciado</option>
+                <option value="Iniciado" <?= $proyectoEditar['estado']=='Iniciado'?'selected':'' ?>>Iniciado</option>
+                <option value="Pausado" <?= $proyectoEditar['estado']=='Pausado'?'selected':'' ?>>Pausado</option>
+                <option value="Finalizado" <?= $proyectoEditar['estado']=='Finalizado'?'selected':'' ?>>Finalizado</option>
+              </select>
+            </label>
+            <br>
+            <h3>Asignar usuarios</h3>
+            <?php foreach ($usuarios as $u): ?>
+              <label>
+                <input type="checkbox" name="usuarios_seleccionados[]" value="<?= $u['id'] ?>" <?= in_array($u['id'], $participantesActuales) ? 'checked' : '' ?>>
+                <?= htmlspecialchars($u['nombre'] . ' ' . $u['apellido_paterno']) ?> (<?= htmlspecialchars($u['email']) ?>)
+              </label><br>
+            <?php endforeach; ?>
+            <button>Guardar</button>
+            <a href="dashboard_admin.php?tab=proyectos">Cancelar</a>
+          </form>
+        <?php endif; endif; ?>
+
       <?php elseif ($tab === 'habilidades'): ?>
         <h2>Nueva habilidad</h2>
           <form action="habilidades.php" method="POST">
@@ -331,17 +456,17 @@ $tab = $_GET['tab'] ?? 'empresas';
           </form>
 
         <h2>Habilidades registradas</h2>
-        <table>
-          <tr><th>ID</th><th>Nombre</th><th>Renombrar</th><th>Eliminar</th></tr>
+          <table>
+          <tr><th>ID</th><th>Nombre</th><th>Modificar</th><th>Eliminar</th></tr>
           <?php foreach ($habilidades as $h): ?>
           <tr>
             <td><?= htmlspecialchars($h['id']) ?></td>
             <td><?= htmlspecialchars($h['nombre']) ?></td>
             <td>
-              <form action="habilidades.php" method="POST">
-                <input type="hidden" name="editar_habilidad_id" value="<?= $h['id'] ?>">
-                <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
-                <button>Cambiar</button>
+              <form method="GET" action="dashboard_admin.php">
+                <input type="hidden" name="tab" value="habilidades">
+                <input type="hidden" name="edit_habilidad_id" value="<?= $h['id'] ?>">
+                <button>Modificar</button>
               </form>
             </td>
             <td>
@@ -353,6 +478,20 @@ $tab = $_GET['tab'] ?? 'empresas';
           </tr>
           <?php endforeach; ?>
         </table>
+
+        <?php if (isset($_GET['edit_habilidad_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM habilidades WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_habilidad_id']]);
+              $habilidadEditar = $stmt->fetch();
+              if ($habilidadEditar): ?>
+          <h3>Editar habilidad</h3>
+          <form action="habilidades.php" method="POST">
+            <input type="hidden" name="actualizar_habilidad_id" value="<?= $habilidadEditar['id'] ?>">
+            <input type="text" name="nombre_habilidad" required value="<?= htmlspecialchars($habilidadEditar['nombre']) ?>">
+            <button>Guardar</button>
+            <a href="dashboard_admin.php?tab=habilidades">Cancelar</a>
+          </form>
+        <?php endif; endif; ?>
 
       <?php else: ?>
         <p>Pestaña no válida.</p>

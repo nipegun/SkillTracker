@@ -5,6 +5,42 @@ require_once 'auth.php';
 requerirLogin();
 if (!esSuperAdmin()) exit("Acceso denegado");
 
+// ---- Actualizar oficina completa ----
+if (isset($_POST['actualizar_oficina_id'])) {
+    $oficina_id = (int)$_POST['actualizar_oficina_id'];
+    $nombre = trim($_POST['nombre_oficina']);
+    $empresaId = intval($_POST['empresa_id']);
+    $ciudad = trim($_POST['ciudad']);
+
+    if ($nombre === '' || $ciudad === '' || $empresaId === 0) {
+        exit("Los campos no pueden estar vacíos.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM oficinas WHERE id = ?");
+    $stmt->execute([$oficina_id]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Oficina no válida.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE id = ?");
+    $stmt->execute([$empresaId]);
+    if ($stmt->fetchColumn() == 0) {
+        exit("Empresa no válida.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM oficinas WHERE nombre = ? AND ciudad = ? AND empresa_id = ? AND id != ?");
+    $stmt->execute([$nombre, $ciudad, $empresaId, $oficina_id]);
+    if ($stmt->fetchColumn() > 0) {
+        exit("Ya existe una oficina con ese nombre en esa ciudad.");
+    }
+
+    $stmt = $pdo->prepare("UPDATE oficinas SET nombre = ?, empresa_id = ?, ciudad = ? WHERE id = ?");
+    $stmt->execute([$nombre, $empresaId, $ciudad, $oficina_id]);
+
+    header("Location: dashboard_admin.php?tab=oficinas");
+    exit;
+}
+
 // ---- Eliminar oficina ----
 if (isset($_POST['eliminar_oficina_id'])) {
     $oficina_id = (int)$_POST['eliminar_oficina_id'];
