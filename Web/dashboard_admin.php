@@ -119,7 +119,7 @@ $tab = $_GET['tab'] ?? 'empresas';
         <form action="empresas.php" method="POST">
           <input type="text" name="nombre_empresa" required>
           <select name="grupo_id">
-            <option value="">Ninguno</option>
+            <option value="">-</option>
             <?php foreach ($grupos as $g): ?>
               <option value="<?= $g['id'] ?>"><?= htmlspecialchars($g['nombre']) ?></option>
             <?php endforeach; ?>
