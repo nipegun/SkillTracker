@@ -6,9 +6,10 @@ requerirLogin();
 $id_usuario = $_SESSION['usuario_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nombre_proyecto'])) {
-  $pdo->prepare("INSERT INTO proyectos (nombre, descripcion, creador_id) VALUES (?, ?, ?)")
-      ->execute([$_POST['nombre_proyecto'], $_POST['descripcion'], $id_usuario]);
-  $proyecto_id = $pdo->lastInsertId();
+  $id = obtenerSiguienteId($pdo, 'proyectos');
+  $pdo->prepare("INSERT INTO proyectos (id, nombre, descripcion, creador_id) VALUES (?, ?, ?, ?)")
+      ->execute([$id, $_POST['nombre_proyecto'], $_POST['descripcion'], $id_usuario]);
+  $proyecto_id = $id;
   if (!empty($_POST['usuarios_seleccionados'])) {
     $stmt = $pdo->prepare("INSERT INTO proyecto_usuario (proyecto_id, usuario_id) VALUES (?, ?)");
     foreach ($_POST['usuarios_seleccionados'] as $uid) {
