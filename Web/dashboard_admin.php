@@ -167,13 +167,26 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Oficinas registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th><th>Empresa</th><th>Ciudad</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Empresa</th><th>Ciudad</th><th>Renombrar</th><th>Eliminar</th></tr>
           <?php foreach ($oficinas as $o): ?>
             <tr>
               <td><?= htmlspecialchars($o['id']) ?></td>
               <td><?= htmlspecialchars($o['nombre']) ?></td>
               <td><?= htmlspecialchars($o['empresa_nombre']) ?></td>
               <td><?= htmlspecialchars($o['ciudad']) ?></td>
+              <td>
+                <form action="oficinas.php" method="POST">
+                  <input type="hidden" name="editar_oficina_id" value="<?= $o['id'] ?>">
+                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
+                  <button>Cambiar</button>
+                </form>
+              </td>
+              <td>
+                <form action="oficinas.php" method="POST" onsubmit="return confirm('¿Borrar oficina?');">
+                  <input type="hidden" name="eliminar_oficina_id" value="<?= $o['id'] ?>">
+                  <button>Eliminar</button>
+                </form>
+              </td>
             </tr>
           <?php endforeach; ?>
         </table>
@@ -220,6 +233,8 @@ $tab = $_GET['tab'] ?? 'empresas';
             <th>Oficina</th>
             <th>Ciudad</th>
             <th>Es admin</th>
+            <th>Renombrar</th>
+            <th>Eliminar</th>
           </tr>
           <?php foreach ($usuarios as $u): ?>
             <tr>
@@ -230,6 +245,19 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($u['oficina']) ?></td>
               <td><?= htmlspecialchars($u['ciudad']) ?></td>
               <td><?= $u['es_admin'] ? 'Sí' : 'No' ?></td>
+              <td>
+                <form action="usuarios.php" method="POST">
+                  <input type="hidden" name="editar_usuario_id" value="<?= $u['id'] ?>">
+                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
+                  <button>Cambiar</button>
+                </form>
+              </td>
+              <td>
+                <form action="usuarios.php" method="POST" onsubmit="return confirm('¿Borrar usuario?');">
+                  <input type="hidden" name="eliminar_usuario_id" value="<?= $u['id'] ?>">
+                  <button>Eliminar</button>
+                </form>
+              </td>
             </tr>
           <?php endforeach; ?>
         </table>
@@ -268,6 +296,8 @@ $tab = $_GET['tab'] ?? 'empresas';
             <th>Descripci&oacute;n</th>
             <th>Estado</th>
             <th>Participantes</th>
+            <th>Renombrar</th>
+            <th>Eliminar</th>
           </tr>
           <?php foreach ($proyectos as $p): ?>
             <tr>
@@ -276,6 +306,19 @@ $tab = $_GET['tab'] ?? 'empresas';
               <td><?= htmlspecialchars($p['descripcion']) ?></td>
               <td><?= htmlspecialchars($p['estado']) ?></td>
               <td><?= htmlspecialchars($p['participantes']) ?></td>
+              <td>
+                <form action="crear_proyecto.php" method="POST">
+                  <input type="hidden" name="editar_proyecto_id" value="<?= $p['id'] ?>">
+                  <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
+                  <button>Cambiar</button>
+                </form>
+              </td>
+              <td>
+                <form action="crear_proyecto.php" method="POST" onsubmit="return confirm('¿Borrar proyecto?');">
+                  <input type="hidden" name="eliminar_proyecto_id" value="<?= $p['id'] ?>">
+                  <button>Eliminar</button>
+                </form>
+              </td>
             </tr>
           <?php endforeach; ?>
         </table>
@@ -289,11 +332,24 @@ $tab = $_GET['tab'] ?? 'empresas';
 
         <h2>Habilidades registradas</h2>
         <table>
-          <tr><th>ID</th><th>Nombre</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Renombrar</th><th>Eliminar</th></tr>
           <?php foreach ($habilidades as $h): ?>
           <tr>
             <td><?= htmlspecialchars($h['id']) ?></td>
             <td><?= htmlspecialchars($h['nombre']) ?></td>
+            <td>
+              <form action="habilidades.php" method="POST">
+                <input type="hidden" name="editar_habilidad_id" value="<?= $h['id'] ?>">
+                <input type="text" name="nuevo_nombre" required placeholder="Nuevo nombre">
+                <button>Cambiar</button>
+              </form>
+            </td>
+            <td>
+              <form action="habilidades.php" method="POST" onsubmit="return confirm('¿Borrar habilidad?');">
+                <input type="hidden" name="eliminar_habilidad_id" value="<?= $h['id'] ?>">
+                <button>Eliminar</button>
+              </form>
+            </td>
           </tr>
           <?php endforeach; ?>
         </table>
