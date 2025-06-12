@@ -31,8 +31,9 @@ if (isset($_POST['nombre_grupo'])) {
     if ($stmt->fetchColumn() > 0) {
         exit("Ya existe un grupo con ese nombre.");
     }
-    $stmt = $pdo->prepare("INSERT INTO grupos (nombre) VALUES (?)");
-    $stmt->execute([$nombre]);
+    $id = obtenerSiguienteId($pdo, 'grupos');
+    $stmt = $pdo->prepare("INSERT INTO grupos (id, nombre) VALUES (?, ?)");
+    $stmt->execute([$id, $nombre]);
     header("Location: dashboard_admin.php?tab=grupos");
     exit;
 }

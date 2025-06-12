@@ -81,8 +81,9 @@ if (isset($_POST['grupo_id']) && $_POST['grupo_id'] !== '') {
   }
 }
 
-$stmt = $pdo->prepare("INSERT INTO empresas (nombre, grupo_id) VALUES (?, ?)");
-$stmt->execute([$nombre, $grupo_id]);
+$id = obtenerSiguienteId($pdo, 'empresas');
+$stmt = $pdo->prepare("INSERT INTO empresas (id, nombre, grupo_id) VALUES (?, ?, ?)");
+$stmt->execute([$id, $nombre, $grupo_id]);
 
 header("Location: dashboard_admin.php?tab=empresas");
 exit;

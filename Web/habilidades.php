@@ -21,8 +21,9 @@ if ($stmt->fetchColumn() > 0) {
 }
 
 // Insertar la empresa
-$stmt = $pdo->prepare("INSERT INTO habilidades (nombre) VALUES (?)");
-$stmt->execute([$nombre]);
+$id = obtenerSiguienteId($pdo, 'habilidades');
+$stmt = $pdo->prepare("INSERT INTO habilidades (id, nombre) VALUES (?, ?)");
+$stmt->execute([$id, $nombre]);
 
 header("Location: dashboard_admin.php");
 exit;

@@ -28,8 +28,9 @@ if ($stmt->fetchColumn() > 0) {
 }
 
 // Insertar la oficina
-$stmt = $pdo->prepare("INSERT INTO oficinas (nombre, empresa_id, ciudad) VALUES (?, ?, ?)");
-$stmt->execute([$nombre, $empresaId, $ciudad]);
+$id = obtenerSiguienteId($pdo, 'oficinas');
+$stmt = $pdo->prepare("INSERT INTO oficinas (id, nombre, empresa_id, ciudad) VALUES (?, ?, ?, ?)");
+$stmt->execute([$id, $nombre, $empresaId, $ciudad]);
 
 header("Location: dashboard_admin.php");
 exit;

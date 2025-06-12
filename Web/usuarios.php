@@ -35,12 +35,14 @@ if ($stmt->fetchColumn() > 0) {
 $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
 // Insertar usuario
+$id = obtenerSiguienteId($pdo, 'usuarios');
 $stmt = $pdo->prepare("INSERT INTO usuarios (
-  nombre, apellido_paterno, apellido_materno, email,
+  id, nombre, apellido_paterno, apellido_materno, email,
   password_hash, oficina_id, empresa_id, ciudad, es_admin
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $stmt->execute([
+  $id,
   $_POST['nombre'],
   $_POST['apellido_paterno'],
   $_POST['apellido_materno'] ?? '',
