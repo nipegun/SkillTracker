@@ -70,8 +70,8 @@ $stmt = $pdo->prepare("
 $stmt->execute([$id_usuario, $id_usuario]);
 $proyectos_participa = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$tab = $_GET['tab'] ?? 'proyectos';
-$tab = in_array($tab, ['proyectos', 'habilidades'], true) ? $tab : 'proyectos';
+$tab = $_GET['tab'] ?? 'inicio';
+$tab = in_array($tab, ['inicio', 'proyectos', 'habilidades'], true) ? $tab : 'inicio';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -96,6 +96,13 @@ $tab = in_array($tab, ['proyectos', 'habilidades'], true) ? $tab : 'proyectos';
       <p>Consulta tu información asignada, revisa tus proyectos y mantén tus habilidades al día.</p>
     </header>
 
+    <nav class="tabs" aria-label="Secciones del panel del usuario">
+      <a href="?tab=inicio" class="tab-link <?= $tab === 'inicio' ? 'active' : '' ?>">Inicio</a>
+      <a href="?tab=proyectos" class="tab-link <?= $tab === 'proyectos' ? 'active' : '' ?>">Proyectos</a>
+      <a href="?tab=habilidades" class="tab-link <?= $tab === 'habilidades' ? 'active' : '' ?>">Habilidades</a>
+    </nav>
+
+    <?php if ($tab === 'inicio'): ?>
     <section class="panel-section">
       <div class="card info-card">
         <div class="section-heading">
@@ -130,13 +137,7 @@ $tab = in_array($tab, ['proyectos', 'habilidades'], true) ? $tab : 'proyectos';
         </div>
       </div>
     </section>
-
-    <nav class="tabs" aria-label="Secciones del panel del usuario">
-      <a href="?tab=proyectos" class="tab-link <?= $tab === 'proyectos' ? 'active' : '' ?>">Proyectos</a>
-      <a href="?tab=habilidades" class="tab-link <?= $tab === 'habilidades' ? 'active' : '' ?>">Habilidades</a>
-    </nav>
-
-    <?php if ($tab === 'proyectos'): ?>
+    <?php elseif ($tab === 'proyectos'): ?>
     <section class="panel-section">
       <div class="card list-card">
         <div class="section-heading">
