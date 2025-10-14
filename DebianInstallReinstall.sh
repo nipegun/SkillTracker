@@ -9,13 +9,13 @@
 # NiPeGun's script to install and configure SkillTracker on Debian
 #
 # Remote execution (may require sudo privileges):
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstallReinstall.sh | bash
 #
 # Remote execution as root (for systems without sudo):
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | sed 's-sudo--g' | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstallReinstall.sh | sed 's-sudo--g' | bash
 #
 # Download and edit the file directly in nano:
-#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstall.sh | nano -
+#   curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianInstallReinstall.sh | nano -
 # ----------
 
 # Define color constants in Bash (for terminal output):
