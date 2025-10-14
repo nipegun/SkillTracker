@@ -87,7 +87,10 @@ $tab = in_array($tab, ['inicio', 'proyectos', 'habilidades'], true) ? $tab : 'in
       <img src="/images/SkillTrackerLogo.png" alt="Logo SkillTracker">
       <span>SkillTracker</span>
     </div>
-    <a href="logout.php" class="logout-button">Cerrar sesión</a>
+    <div class="top-bar-actions">
+      <a href="cuenta.php" class="ghost-button">Cuenta</a>
+      <a href="logout.php" class="logout-button">Cerrar sesión</a>
+    </div>
   </div>
 
   <main class="main-content">

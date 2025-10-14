@@ -35,6 +35,7 @@ $proyectos_participa = $stmt2->fetchAll();
     <div class="top-bar-actions">
       <a href="nuevo_proyecto.php" class="primary-button">Nuevo proyecto</a>
       <a href="dashboard.php" class="ghost-button">Volver al panel</a>
+      <a href="cuenta.php" class="ghost-button">Cuenta</a>
       <a href="logout.php" class="logout-button">Cerrar sesión</a>
     </div>
   </div>

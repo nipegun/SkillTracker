@@ -77,7 +77,10 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
       <img src="/images/SkillTrackerLogo.png" alt="Logo SkillTracker">
       <span>SkillTracker</span>
     </div>
-    <a href="logout.php" class="logout-button">Cerrar sesión</a>
+    <div class="top-bar-actions">
+      <a href="cuenta.php" class="ghost-button">Cuenta</a>
+      <a href="logout.php" class="logout-button">Cerrar sesión</a>
+    </div>
   </div>
 
   <main class="main-content">
