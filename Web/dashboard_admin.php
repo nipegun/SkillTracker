@@ -332,6 +332,68 @@ $tab = $_GET['tab'] ?? 'empresas';
 
       <?php elseif ($tab === 'usuarios'): ?>
         <section class="panel-section">
+          <div class="card form-card">
+            <div class="section-heading">
+              <h2>Registrar nuevo usuario</h2>
+              <p>Crea nuevas cuentas para tu organización desde el panel de administración.</p>
+            </div>
+            <form action="usuarios.php" method="POST" class="form-grid">
+              <div class="form-field">
+                <label for="nombre_usuario">Nombre</label>
+                <input type="text" id="nombre_usuario" name="nombre" required>
+              </div>
+              <div class="form-field">
+                <label for="apellido_paterno">Apellido paterno</label>
+                <input type="text" id="apellido_paterno" name="apellido_paterno" required>
+              </div>
+              <div class="form-field">
+                <label for="apellido_materno">Apellido materno</label>
+                <input type="text" id="apellido_materno" name="apellido_materno">
+              </div>
+              <div class="form-field">
+                <label for="email_usuario">Email</label>
+                <input type="email" id="email_usuario" name="email" required>
+              </div>
+              <div class="form-field">
+                <label for="password_usuario">Contraseña</label>
+                <input type="password" id="password_usuario" name="password" required>
+              </div>
+              <div class="form-field">
+                <label for="empresa_usuario">Empresa</label>
+                <select name="empresa_id" id="empresa_usuario" required>
+                  <option value="" disabled selected>Selecciona una empresa</option>
+                  <?php foreach ($empresas as $e): ?>
+                    <option value="<?= $e['id'] ?>"><?= htmlspecialchars($e['nombre']) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="oficina_usuario">Oficina</label>
+                <select name="oficina_id" id="oficina_usuario" required>
+                  <option value="" disabled selected>Selecciona una oficina</option>
+                  <?php foreach ($oficinas as $o): ?>
+                    <option value="<?= $o['id'] ?>"><?= htmlspecialchars($o['nombre']) ?> - <?= htmlspecialchars($o['ciudad']) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="ciudad_usuario">Ciudad</label>
+                <input type="text" id="ciudad_usuario" name="ciudad" required>
+              </div>
+              <div class="form-field">
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="es_admin">
+                  <span>Conceder privilegios de administrador</span>
+                </label>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-button">Crear usuario</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel-section">
           <div class="card table-card">
             <div class="section-heading">
               <h2>Usuarios registrados</h2>
@@ -361,10 +423,12 @@ $tab = $_GET['tab'] ?? 'empresas';
                           <input type="hidden" name="edit_usuario_id" value="<?= $u['id'] ?>">
                           <button type="submit" class="ghost-button">Editar</button>
                         </form>
-                        <form action="usuarios.php" method="POST" class="inline-form" onsubmit="return confirm('¿Borrar usuario?');">
-                          <input type="hidden" name="eliminar_usuario_id" value="<?= $u['id'] ?>">
-                          <button type="submit" class="danger-button">Eliminar</button>
-                        </form>
+                        <?php if (!$u['es_admin']): ?>
+                          <form action="usuarios.php" method="POST" class="inline-form" onsubmit="return confirm('¿Borrar usuario?');">
+                            <input type="hidden" name="eliminar_usuario_id" value="<?= $u['id'] ?>">
+                            <button type="submit" class="danger-button">Eliminar</button>
+                          </form>
+                        <?php endif; ?>
                       </td>
                     </tr>
                   <?php endforeach; ?>
