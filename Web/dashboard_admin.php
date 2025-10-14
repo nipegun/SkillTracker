@@ -33,10 +33,11 @@ $oficinas = $pdo->query(
    ORDER BY o.id ASC"
 )->fetchAll();
 $usuarios = $pdo->query("
-  SELECT u.*, e.nombre AS empresa, o.nombre AS oficina, o.ciudad AS oficina_ciudad
+  SELECT u.*, e.nombre AS empresa, o.nombre AS oficina, o.ciudad AS oficina_ciudad, g.nombre AS grupo
   FROM usuarios u
   JOIN empresas e ON u.empresa_id = e.id
   JOIN oficinas o ON u.oficina_id = o.id
+  LEFT JOIN grupos g ON e.grupo_id = g.id
 ORDER BY id ASC")->fetchAll();
 $habilidades = $pdo->query("SELECT * FROM habilidades ORDER BY id ASC")->fetchAll();
 
@@ -493,19 +494,17 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>ID</th><th>Nombre</th><th>Apellidos</th><th>Email</th><th>Empresa</th><th>Oficina</th><th>Ciudad</th><th>Rol</th><th>Acciones</th>
+                    <th>Email</th><th>Grupo</th><th>Empresa</th><th>Ciudad</th><th>Oficina</th><th>Rol</th><th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php foreach ($usuarios as $u): ?>
                     <tr>
-                      <td><?= htmlspecialchars($u['id']) ?></td>
-                      <td><?= htmlspecialchars($u['nombre']) ?></td>
-                      <td><?= htmlspecialchars(trim($u['apellido_paterno'] . ' ' . $u['apellido_materno'])) ?></td>
                       <td><?= htmlspecialchars($u['email']) ?></td>
+                      <td><?= htmlspecialchars($u['grupo'] ?? '—') ?></td>
                       <td><?= htmlspecialchars($u['empresa']) ?></td>
+                      <td><?= htmlspecialchars($u['oficina_ciudad'] ?: $u['ciudad']) ?></td>
                       <td><?= htmlspecialchars($u['oficina']) ?></td>
-                      <td><?= htmlspecialchars($u['ciudad']) ?></td>
                       <td><?= $u['es_admin'] ? 'Admin' : 'Usuario' ?></td>
                       <td class="table-actions">
                         <form method="GET" action="dashboard_admin.php" class="inline-form">
