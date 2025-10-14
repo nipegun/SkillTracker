@@ -91,22 +91,6 @@ $tab = $_GET['tab'] ?? 'empresas';
     <div class="tab-content">
       <?php if ($tab === 'grupos'): ?>
         <section class="panel-section">
-          <div class="card form-card">
-            <div class="section-heading">
-              <h2>Crear nuevo grupo</h2>
-              <p>Organiza tus empresas por grupo para facilitar la administración.</p>
-            </div>
-            <form action="grupos.php" method="POST" class="form-grid">
-              <div class="form-field full-width">
-                <label for="nombre_grupo">Nombre del grupo</label>
-                <input type="text" id="nombre_grupo" name="nombre_grupo" required placeholder="Ej. División Norte">
-              </div>
-              <button type="submit" class="primary-button">Crear grupo</button>
-            </form>
-          </div>
-        </section>
-
-        <section class="panel-section">
           <div class="card table-card">
             <div class="section-heading">
               <h2>Grupos registrados</h2>
@@ -141,6 +125,22 @@ $tab = $_GET['tab'] ?? 'empresas';
                 </tbody>
               </table>
             </div>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="card form-card">
+            <div class="section-heading">
+              <h2>Crear nuevo grupo</h2>
+              <p>Organiza tus empresas por grupo para facilitar la administración.</p>
+            </div>
+            <form action="grupos.php" method="POST" class="form-grid">
+              <div class="form-field full-width">
+                <label for="nombre_grupo">Nombre del grupo</label>
+                <input type="text" id="nombre_grupo" name="nombre_grupo" required placeholder="Ej. División Norte">
+              </div>
+              <button type="submit" class="primary-button">Crear grupo</button>
+            </form>
           </div>
         </section>
 
