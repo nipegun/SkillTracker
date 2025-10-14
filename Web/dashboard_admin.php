@@ -307,7 +307,7 @@ $tab = $_GET['tab'] ?? 'empresas';
             <div class="table-wrapper">
               <table class="data-table">
                 <thead>
-                  <tr><th>ID</th><th>Nombre</th><th>Ciudad</th><th>Empresa</th><th>Eliminar</th></tr>
+                  <tr><th>ID</th><th>Nombre</th><th>Ciudad</th><th>Empresa</th><th>Modificar</th><th>Eliminar</th></tr>
                 </thead>
                 <tbody>
                   <?php foreach ($oficinas as $o): ?>
@@ -316,6 +316,13 @@ $tab = $_GET['tab'] ?? 'empresas';
                       <td><?= htmlspecialchars($o['nombre']) ?></td>
                       <td><?= htmlspecialchars($o['ciudad']) ?></td>
                       <td><?= htmlspecialchars($o['empresa_nombre']) ?></td>
+                      <td>
+                        <form method="GET" action="dashboard_admin.php" class="inline-form">
+                          <input type="hidden" name="tab" value="oficinas">
+                          <input type="hidden" name="edit_oficina_id" value="<?= $o['id'] ?>">
+                          <button type="submit" class="ghost-button">Modificar</button>
+                        </form>
+                      </td>
                       <td>
                         <form action="oficinas.php" method="POST" class="inline-form" onsubmit="return confirm('¿Borrar oficina?');">
                           <input type="hidden" name="eliminar_oficina_id" value="<?= $o['id'] ?>">
@@ -329,6 +336,44 @@ $tab = $_GET['tab'] ?? 'empresas';
             </div>
           </div>
         </section>
+
+        <?php if (isset($_GET['edit_oficina_id'])):
+              $stmt = $pdo->prepare("SELECT * FROM oficinas WHERE id = ?");
+              $stmt->execute([(int)$_GET['edit_oficina_id']]);
+              $oficinaEditar = $stmt->fetch();
+              if ($oficinaEditar): ?>
+          <section class="panel-section">
+            <div class="card form-card">
+              <div class="section-heading">
+                <h3>Editar oficina</h3>
+                <p>Actualiza los datos de la oficina seleccionada.</p>
+              </div>
+              <form action="oficinas.php" method="POST" class="form-grid">
+                <input type="hidden" name="actualizar_oficina_id" value="<?= $oficinaEditar['id'] ?>">
+                <div class="form-field">
+                  <label for="nombre_oficina_edit">Nombre</label>
+                  <input type="text" id="nombre_oficina_edit" name="nombre_oficina" required value="<?= htmlspecialchars($oficinaEditar['nombre']) ?>">
+                </div>
+                <div class="form-field">
+                  <label for="empresa_id_edit">Empresa</label>
+                  <select name="empresa_id" id="empresa_id_edit" required>
+                    <?php foreach ($empresas as $e): ?>
+                      <option value="<?= $e['id'] ?>" <?= $oficinaEditar['empresa_id'] == $e['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="ciudad_edit">Ciudad</label>
+                  <input type="text" id="ciudad_edit" name="ciudad" required value="<?= htmlspecialchars($oficinaEditar['ciudad']) ?>">
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="primary-button">Guardar cambios</button>
+                  <a href="dashboard_admin.php?tab=oficinas" class="ghost-link">Cancelar</a>
+                </div>
+              </form>
+            </div>
+          </section>
+        <?php endif; endif; ?>
 
       <?php elseif ($tab === 'usuarios'): ?>
         <section class="panel-section">
