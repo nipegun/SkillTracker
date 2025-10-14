@@ -5,6 +5,29 @@ require_once 'auth.php';
 requerirLogin();
 $id_usuario = $_SESSION['usuario_id'];
 
+// Obtener información del usuario y sus asignaciones
+$stmt = $pdo->prepare("
+  SELECT u.nombre,
+         u.apellido_paterno,
+         u.apellido_materno,
+         u.ciudad AS ciudad_usuario,
+         e.nombre AS empresa_nombre,
+         o.nombre AS oficina_nombre,
+         o.ciudad AS oficina_ciudad,
+         g.nombre AS grupo_nombre
+  FROM usuarios u
+  LEFT JOIN empresas e ON u.empresa_id = e.id
+  LEFT JOIN oficinas o ON u.oficina_id = o.id
+  LEFT JOIN grupos g ON e.grupo_id = g.id
+  WHERE u.id = ?
+");
+$stmt->execute([$id_usuario]);
+$usuario_info = $stmt->fetch(PDO::FETCH_ASSOC);
+$ciudad_asignada = null;
+if ($usuario_info) {
+  $ciudad_asignada = $usuario_info['oficina_ciudad'] ?: $usuario_info['ciudad_usuario'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Eliminar habilidades anteriores
   $pdo->prepare("DELETE FROM usuario_habilidad WHERE usuario_id = ?")->execute([$id_usuario]);
@@ -31,6 +54,21 @@ $habilidades = $pdo->query("SELECT * FROM habilidades ORDER BY nombre")->fetchAl
 $stmt = $pdo->prepare("SELECT habilidad_id FROM usuario_habilidad WHERE usuario_id = ?");
 $stmt->execute([$id_usuario]);
 $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
+
+// Proyectos que lidera y donde participa
+$stmt = $pdo->prepare("SELECT * FROM proyectos WHERE creador_id = ? ORDER BY id DESC");
+$stmt->execute([$id_usuario]);
+$proyectos_creados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->prepare("
+  SELECT p.*
+  FROM proyectos p
+  INNER JOIN proyecto_usuario pu ON pu.proyecto_id = p.id
+  WHERE pu.usuario_id = ? AND p.creador_id != ?
+  ORDER BY p.id DESC
+");
+$stmt->execute([$id_usuario, $id_usuario]);
+$proyectos_participa = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -52,8 +90,117 @@ $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
   <main class="main-content">
     <header class="page-header">
       <h1>Panel del usuario</h1>
-      <p>Selecciona las habilidades que dominas para mantener tu perfil actualizado.</p>
+      <p>Consulta tu información asignada, revisa tus proyectos y mantén tus habilidades al día.</p>
     </header>
+
+    <section class="panel-section">
+      <div class="card info-card">
+        <div class="section-heading">
+          <h2>Tu asignación en la organización</h2>
+          <p>Verifica la estructura a la que perteneces dentro de SkillTracker.</p>
+        </div>
+        <div class="info-grid">
+          <div class="info-grid-item">
+            <span class="info-label">Grupo</span>
+            <span class="info-value">
+              <?= $usuario_info && $usuario_info['grupo_nombre'] ? htmlspecialchars($usuario_info['grupo_nombre']) : 'Sin grupo asignado' ?>
+            </span>
+          </div>
+          <div class="info-grid-item">
+            <span class="info-label">Empresa</span>
+            <span class="info-value">
+              <?= $usuario_info && $usuario_info['empresa_nombre'] ? htmlspecialchars($usuario_info['empresa_nombre']) : 'Sin empresa asignada' ?>
+            </span>
+          </div>
+          <div class="info-grid-item">
+            <span class="info-label">Oficina</span>
+            <span class="info-value">
+              <?= $usuario_info && $usuario_info['oficina_nombre'] ? htmlspecialchars($usuario_info['oficina_nombre']) : 'Sin oficina asignada' ?>
+            </span>
+          </div>
+          <div class="info-grid-item">
+            <span class="info-label">Ciudad</span>
+            <span class="info-value">
+              <?= $usuario_info && $ciudad_asignada ? htmlspecialchars($ciudad_asignada) : 'Sin ciudad asignada' ?>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel-section">
+      <div class="card list-card">
+        <div class="section-heading">
+          <h2>Proyectos asociados</h2>
+          <p>Un resumen de los proyectos que lideras y en los que colaboras.</p>
+        </div>
+        <div class="projects-grid">
+          <div class="project-column">
+            <h3 class="column-title">Proyectos que lideras</h3>
+            <?php if ($proyectos_creados): ?>
+              <ul class="project-list">
+                <?php foreach ($proyectos_creados as $p): ?>
+                  <li class="project-item">
+                    <h4><?= htmlspecialchars($p['nombre']) ?></h4>
+                    <?php if (!empty($p['descripcion'])): ?>
+                      <p><?= nl2br(htmlspecialchars($p['descripcion'])) ?></p>
+                    <?php else: ?>
+                      <p class="empty-state">Sin descripción disponible.</p>
+                    <?php endif; ?>
+                    <div class="project-meta">
+                      <span class="status-pill status-<?= strtolower(str_replace(' ', '-', $p['estado'] ?? 'No definido')) ?>">
+                        <?= htmlspecialchars($p['estado'] ?? 'Sin estado') ?>
+                      </span>
+                      <span>ID #<?= htmlspecialchars($p['id']) ?></span>
+                    </div>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+            <?php else: ?>
+              <p class="empty-state">Todavía no lideras proyectos. ¡Inicia uno nuevo!</p>
+            <?php endif; ?>
+          </div>
+          <div class="project-column">
+            <h3 class="column-title">Proyectos donde colaboras</h3>
+            <?php if ($proyectos_participa): ?>
+              <ul class="project-list">
+                <?php foreach ($proyectos_participa as $p): ?>
+                  <li class="project-item">
+                    <h4><?= htmlspecialchars($p['nombre']) ?></h4>
+                    <?php if (!empty($p['descripcion'])): ?>
+                      <p><?= nl2br(htmlspecialchars($p['descripcion'])) ?></p>
+                    <?php else: ?>
+                      <p class="empty-state">Sin descripción disponible.</p>
+                    <?php endif; ?>
+                    <div class="project-meta">
+                      <span class="status-pill status-<?= strtolower(str_replace(' ', '-', $p['estado'] ?? 'No definido')) ?>">
+                        <?= htmlspecialchars($p['estado'] ?? 'Sin estado') ?>
+                      </span>
+                      <span>ID #<?= htmlspecialchars($p['id']) ?></span>
+                    </div>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+            <?php else: ?>
+              <p class="empty-state">Aún no participas en otros proyectos.</p>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel-section">
+      <div class="card action-card">
+        <div class="section-heading">
+          <h2>Crear un nuevo proyecto</h2>
+          <p>Lanza nuevas iniciativas y asigna al equipo ideal.</p>
+        </div>
+        <div class="action-content">
+          <a class="primary-button" href="nuevo_proyecto.php">Nuevo proyecto</a>
+          <p class="field-hint">Podrás seleccionar las habilidades necesarias del catálogo completo disponible en la base de datos.</p>
+        </div>
+      </div>
+    </section>
 
     <section class="panel-section">
       <div class="card form-card">
