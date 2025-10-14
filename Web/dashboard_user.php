@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Redirigir para evitar reenvío del formulario
-  header("Location: dashboard_user.php");
+  header("Location: dashboard_user.php?tab=habilidades");
   exit;
 }
 
@@ -69,6 +69,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$id_usuario, $id_usuario]);
 $proyectos_participa = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$tab = $_GET['tab'] ?? 'proyectos';
+$tab = in_array($tab, ['proyectos', 'habilidades'], true) ? $tab : 'proyectos';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -128,6 +131,12 @@ $proyectos_participa = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </section>
 
+    <nav class="tabs" aria-label="Secciones del panel del usuario">
+      <a href="?tab=proyectos" class="tab-link <?= $tab === 'proyectos' ? 'active' : '' ?>">Proyectos</a>
+      <a href="?tab=habilidades" class="tab-link <?= $tab === 'habilidades' ? 'active' : '' ?>">Habilidades</a>
+    </nav>
+
+    <?php if ($tab === 'proyectos'): ?>
     <section class="panel-section">
       <div class="card list-card">
         <div class="section-heading">
@@ -201,7 +210,7 @@ $proyectos_participa = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </div>
     </section>
-
+    <?php else: ?>
     <section class="panel-section">
       <div class="card form-card">
         <form method="POST" class="form-grid skill-form">
@@ -218,6 +227,7 @@ $proyectos_participa = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
       </div>
     </section>
+    <?php endif; ?>
   </main>
 </body>
 </html>
