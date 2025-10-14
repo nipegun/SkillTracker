@@ -100,15 +100,38 @@ INSERT INTO usuarios (
   ciudad,
   es_admin
 ) VALUES (
-  'Admin',
-  'General',
+  'admin',
+  'admin',
   '',
-  'admin@ejemplo.com',
-  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- ← hash de "admin123"
+  'admin@skilltracker.com',
+  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- (hash de "admin123")
   1,
   1,
   'Madrid',
   1
+);
+
+-- Normal user: usuariox (password: UsuarioX)
+INSERT INTO usuarios (
+  nombre,
+  apellido_paterno,
+  apellido_materno,
+  email,
+  password_hash,
+  oficina_id,
+  empresa_id,
+  ciudad,
+  es_admin
+) VALUES (
+  'usuariox',
+  'usuariox',
+  '',
+  'usuariox@skilltracker.com',
+  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- (hash de "UsuarioX")
+  1,
+  1,
+  'Madrid',
+  0
 );
 
 -- Algunas habilidades iniciales
