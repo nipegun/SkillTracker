@@ -54,7 +54,7 @@ $proyectos = $pdo->query("
   ORDER BY p.id ASC
 ")->fetchAll();
 
-$tab = $_GET['tab'] ?? 'empresas';
+$tab = $_GET['tab'] ?? 'inicio';
 $grupoEditar = null;
 if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
   $stmt = $pdo->prepare("SELECT * FROM grupos WHERE id = ?");
@@ -86,6 +86,7 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
     </header>
 
     <nav class="tabs" aria-label="Secciones del panel">
+      <a href="?tab=inicio" class="tab-link <?= $tab === 'inicio' ? 'active' : '' ?>">Inicio</a>
       <a href="?tab=grupos" class="tab-link <?= $tab === 'grupos' ? 'active' : '' ?>">Grupos</a>
       <a href="?tab=empresas" class="tab-link <?= $tab === 'empresas' ? 'active' : '' ?>">Empresas</a>
       <a href="?tab=oficinas" class="tab-link <?= $tab === 'oficinas' ? 'active' : '' ?>">Oficinas</a>
@@ -95,7 +96,49 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
     </nav>
 
     <div class="tab-content">
-      <?php if ($tab === 'grupos'): ?>
+      <?php if ($tab === 'inicio'): ?>
+        <section class="panel-section">
+          <div class="card table-card">
+            <div class="section-heading">
+              <h2>Resumen general</h2>
+              <p>Consulta la cantidad de registros en cada módulo principal.</p>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Entidad</th>
+                    <th>Total registrados</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Grupos</td>
+                    <td><?= count($grupos) ?></td>
+                  </tr>
+                  <tr>
+                    <td>Empresas</td>
+                    <td><?= count($empresas) ?></td>
+                  </tr>
+                  <tr>
+                    <td>Oficinas</td>
+                    <td><?= count($oficinas) ?></td>
+                  </tr>
+                  <tr>
+                    <td>Usuarios</td>
+                    <td><?= count($usuarios) ?></td>
+                  </tr>
+                  <tr>
+                    <td>Habilidades</td>
+                    <td><?= count($habilidades) ?></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      <?php elseif ($tab === 'grupos'): ?>
         <section class="panel-section">
           <div class="card table-card">
             <div class="section-heading">
