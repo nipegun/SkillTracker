@@ -69,10 +69,16 @@ if (isset($_POST['actualizar_usuario_id'])) {
 if (isset($_POST['eliminar_usuario_id'])) {
     $uid = (int)$_POST['eliminar_usuario_id'];
 
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT es_admin FROM usuarios WHERE id = ?");
     $stmt->execute([$uid]);
-    if ($stmt->fetchColumn() == 0) {
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$usuario) {
         exit("Usuario no válido.");
+    }
+
+    if (!empty($usuario['es_admin'])) {
+        exit("No se puede eliminar el usuario administrador.");
     }
 
     $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
