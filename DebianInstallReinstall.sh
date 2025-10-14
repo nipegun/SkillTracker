@@ -188,6 +188,7 @@
               echo ""
               echo "  Re-Installing SkillTracker on Debian (Deleting previous installation)..."
               echo ""
+              curl -sL https://raw.githubusercontent.com/nipegun/SkillTracker/refs/heads/main/DebianUninstall.sh | bash
 
             ;;
 
