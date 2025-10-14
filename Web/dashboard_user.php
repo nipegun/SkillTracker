@@ -33,30 +33,44 @@ $stmt->execute([$id_usuario]);
 $habilidades_usuario_ids = array_column($stmt->fetchAll(), 'habilidad_id');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SkillTracker - Panel del usuario</title>
   <link rel="stylesheet" href="/css/dashboard.css">
 </head>
-<body>
+<body class="dashboard-body">
   <div class="top-bar">
-    <img src="/images/SkillTrackerLogo.png" alt="Logo SkillTracker">
+    <div class="top-bar-brand">
+      <img src="/images/SkillTrackerLogo.png" alt="Logo SkillTracker">
+      <span>SkillTracker</span>
+    </div>
     <a href="logout.php" class="logout-button">Cerrar sesión</a>
   </div>
 
-  <div class="main-content">
-    <h1>Panel del usuario</h1>
-    <form method="POST">
-    <?php foreach ($habilidades as $hab): ?>
-      <label>
-        <input type="checkbox" name="habilidades[]" value="<?= $hab['id'] ?>"
-          <?= in_array($hab['id'], $habilidades_usuario_ids) ? 'checked' : '' ?>>
-        <?= htmlspecialchars($hab['nombre']) ?>
-      </label><br>
-    <?php endforeach; ?>
-      <button type="submit">Actualizar</button>
-    </form>
-  </div>
+  <main class="main-content">
+    <header class="page-header">
+      <h1>Panel del usuario</h1>
+      <p>Selecciona las habilidades que dominas para mantener tu perfil actualizado.</p>
+    </header>
+
+    <section class="panel-section">
+      <div class="card form-card">
+        <form method="POST" class="form-grid skill-form">
+          <div class="checkbox-grid">
+            <?php foreach ($habilidades as $hab): ?>
+              <label class="checkbox-tile">
+                <input type="checkbox" name="habilidades[]" value="<?= $hab['id'] ?>"
+                  <?= in_array($hab['id'], $habilidades_usuario_ids) ? 'checked' : '' ?>>
+                <span><?= htmlspecialchars($hab['nombre']) ?></span>
+              </label>
+            <?php endforeach; ?>
+          </div>
+          <button type="submit" class="primary-button">Actualizar habilidades</button>
+        </form>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
