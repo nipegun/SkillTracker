@@ -52,6 +52,7 @@ if (isset($_GET['habilidades']) && is_array($_GET['habilidades']) && $_GET['habi
     <div class="top-bar-actions">
       <a href="proyectos.php" class="ghost-button">Mis proyectos</a>
       <a href="dashboard.php" class="ghost-button">Volver al panel</a>
+      <a href="cuenta.php" class="ghost-button">Cuenta</a>
       <a href="logout.php" class="logout-button">Cerrar sesión</a>
     </div>
   </div>
