@@ -88,7 +88,7 @@ INSERT INTO empresas (nombre, grupo_id) VALUES ('EmpresaPrincipal', 1);
 -- Oficina inicial
 INSERT INTO oficinas (nombre, empresa_id, ciudad) VALUES ('OficinaCentral', 1, 'Madrid');
 
--- Usuario superadmin (contraseña: admin123)
+-- Admin user: admin (password: admin123)
 INSERT INTO usuarios (
   nombre,
   apellido_paterno,
@@ -104,7 +104,7 @@ INSERT INTO usuarios (
   'admin',
   '',
   'admin@skilltracker.com',
-  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- (hash de "admin123")
+  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- (hash de "admin123" obtenido con 'mkpasswd -m bcrypt admin123' en bash)
   1,
   1,
   'Madrid',
@@ -127,7 +127,7 @@ INSERT INTO usuarios (
   'usuariox',
   '',
   'usuariox@skilltracker.com',
-  '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- (hash de "UsuarioX")
+  '$2b$05$0nazvGp4EjuyYJ8fg.XLwOyKHg/8gBlD9NtqujzR/8Ee85otmwgbG', -- (hash de "UsuarioX" obtenido con 'mkpasswd -m bcrypt UsuarioX' en bash)
   1,
   1,
   'Madrid',
