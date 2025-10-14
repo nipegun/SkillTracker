@@ -55,6 +55,12 @@ $proyectos = $pdo->query("
 ")->fetchAll();
 
 $tab = $_GET['tab'] ?? 'empresas';
+$grupoEditar = null;
+if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
+  $stmt = $pdo->prepare("SELECT * FROM grupos WHERE id = ?");
+  $stmt->execute([(int)$_GET['edit_grupo_id']]);
+  $grupoEditar = $stmt->fetch();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -128,27 +134,7 @@ $tab = $_GET['tab'] ?? 'empresas';
           </div>
         </section>
 
-        <section class="panel-section">
-          <div class="card form-card">
-            <div class="section-heading">
-              <h2>Crear nuevo grupo</h2>
-              <p>Organiza tus empresas por grupo para facilitar la administración.</p>
-            </div>
-            <form action="grupos.php" method="POST" class="form-grid">
-              <div class="form-field full-width">
-                <label for="nombre_grupo">Nombre del grupo</label>
-                <input type="text" id="nombre_grupo" name="nombre_grupo" required placeholder="Ej. División Norte">
-              </div>
-              <button type="submit" class="primary-button">Crear grupo</button>
-            </form>
-          </div>
-        </section>
-
-        <?php if (isset($_GET['edit_grupo_id'])):
-              $stmt = $pdo->prepare("SELECT * FROM grupos WHERE id = ?");
-              $stmt->execute([(int)$_GET['edit_grupo_id']]);
-              $grupoEditar = $stmt->fetch();
-              if ($grupoEditar): ?>
+        <?php if ($grupoEditar): ?>
           <section class="panel-section">
             <div class="card form-card">
               <div class="section-heading">
@@ -168,7 +154,23 @@ $tab = $_GET['tab'] ?? 'empresas';
               </form>
             </div>
           </section>
-        <?php endif; endif; ?>
+        <?php endif; ?>
+
+        <section class="panel-section">
+          <div class="card form-card">
+            <div class="section-heading">
+              <h2>Crear nuevo grupo</h2>
+              <p>Organiza tus empresas por grupo para facilitar la administración.</p>
+            </div>
+            <form action="grupos.php" method="POST" class="form-grid">
+              <div class="form-field full-width">
+                <label for="nombre_grupo">Nombre del grupo</label>
+                <input type="text" id="nombre_grupo" name="nombre_grupo" required placeholder="Ej. División Norte">
+              </div>
+              <button type="submit" class="primary-button">Crear grupo</button>
+            </form>
+          </div>
+        </section>
 
       <?php elseif ($tab === 'empresas'): ?>
         <section class="panel-section">
