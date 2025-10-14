@@ -68,41 +68,10 @@ if (isset($_GET['habilidades']) && is_array($_GET['habilidades']) && $_GET['habi
           <h2>Detalles del proyecto</h2>
           <p>Completa la información para lanzar un nuevo proyecto.</p>
         </div>
-        <form method="POST" class="form-grid">
-          <div class="form-field full-width">
-            <label for="nombre_proyecto">Nombre</label>
-            <input type="text" id="nombre_proyecto" name="nombre_proyecto" required placeholder="Ej. Plataforma de analítica">
-          </div>
-          <div class="form-field full-width">
-            <label for="descripcion">Descripción</label>
-            <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe el propósito y alcance del proyecto"></textarea>
-          </div>
 
-          <?php if ($usuarios_filtrados): ?>
-            <div class="form-field full-width">
-              <label>Selecciona miembros</label>
-              <div class="checkbox-grid">
-                <?php foreach ($usuarios_filtrados as $u): ?>
-                  <label class="checkbox-tile">
-                    <input type="checkbox" name="usuarios_seleccionados[]" value="<?= $u['id'] ?>">
-                    <span><?= htmlspecialchars($u['nombre'] . ' ' . $u['apellido_paterno']) ?> · <?= htmlspecialchars($u['email']) ?></span>
-                  </label>
-                <?php endforeach; ?>
-              </div>
-              <p class="field-hint">Selecciona las personas adecuadas según las habilidades filtradas.</p>
-            </div>
-          <?php endif; ?>
-
-          <button type="submit" class="primary-button">Crear proyecto</button>
-        </form>
-      </div>
-    </section>
-
-    <section class="panel-section">
-      <div class="card form-card">
         <div class="section-heading">
-          <h2>Buscar talento por habilidades</h2>
-          <p>Filtra colaboradores según las habilidades que necesitas.</p>
+          <h3>Habilidades necesarias</h3>
+          <p>Elige las habilidades clave para encontrar al talento ideal antes de crear el proyecto.</p>
         </div>
         <form method="GET" class="form-grid skill-form">
           <div class="checkbox-grid">
@@ -114,6 +83,41 @@ if (isset($_GET['habilidades']) && is_array($_GET['habilidades']) && $_GET['habi
             <?php endforeach; ?>
           </div>
           <button type="submit" class="ghost-button">Buscar talento</button>
+        </form>
+
+        <form method="POST" class="form-grid">
+          <div class="form-field full-width">
+            <label for="nombre_proyecto">Nombre</label>
+            <input type="text" id="nombre_proyecto" name="nombre_proyecto" required placeholder="Ej. Plataforma de analítica">
+          </div>
+          <div class="form-field full-width">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe el propósito y alcance del proyecto"></textarea>
+          </div>
+
+          <?php if (isset($_GET['habilidades']) && is_array($_GET['habilidades']) && $_GET['habilidades']): ?>
+            <?php if ($usuarios_filtrados): ?>
+              <div class="form-field full-width">
+                <label>Selecciona miembros</label>
+                <div class="checkbox-grid">
+                  <?php foreach ($usuarios_filtrados as $u): ?>
+                    <label class="checkbox-tile">
+                      <input type="checkbox" name="usuarios_seleccionados[]" value="<?= $u['id'] ?>">
+                      <span><?= htmlspecialchars($u['nombre'] . ' ' . $u['apellido_paterno']) ?> · <?= htmlspecialchars($u['email']) ?></span>
+                    </label>
+                  <?php endforeach; ?>
+                </div>
+                <p class="field-hint">Selecciona las personas adecuadas según las habilidades filtradas.</p>
+              </div>
+            <?php else: ?>
+              <div class="form-field full-width">
+                <label>Selecciona miembros</label>
+                <p class="empty-state">Ningún usuario con esta habilidad</p>
+              </div>
+            <?php endif; ?>
+          <?php endif; ?>
+
+          <button type="submit" class="primary-button">Crear proyecto</button>
         </form>
       </div>
     </section>
