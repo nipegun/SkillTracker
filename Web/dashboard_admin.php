@@ -55,12 +55,76 @@ $proyectos = $pdo->query("
   ORDER BY p.id ASC
 ")->fetchAll();
 
+$tablas = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+
+if (!function_exists('formatearBytes')) {
+  function formatearBytes(int $bytes): string {
+    if ($bytes <= 0) {
+      return '0 B';
+    }
+
+    $unidades = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $potencia = min((int)floor(log($bytes, 1024)), count($unidades) - 1);
+    $valor = $bytes / pow(1024, $potencia);
+
+    return number_format($valor, $valor >= 10 ? 0 : 2) . ' ' . $unidades[$potencia];
+  }
+}
+
+$databaseInfo = [
+  'host' => DB_HOST,
+  'name' => DB_NAME,
+  'user' => DB_USER,
+  'tables' => count($tablas),
+  'size_bytes' => 0,
+  'size_readable' => '0 B',
+];
+
+try {
+  $stmtTamanio = $pdo->prepare(
+    'SELECT SUM(data_length + index_length) AS size
+     FROM information_schema.TABLES
+     WHERE table_schema = :schema'
+  );
+  $stmtTamanio->execute(['schema' => DB_NAME]);
+  $tamanio = (int)$stmtTamanio->fetchColumn();
+  if ($tamanio > 0) {
+    $databaseInfo['size_bytes'] = $tamanio;
+    $databaseInfo['size_readable'] = formatearBytes($tamanio);
+  }
+} catch (Throwable $e) {
+  // Ignorar silenciosamente si no se puede consultar el tamaño de la base de datos.
+}
+
 $tab = $_GET['tab'] ?? 'inicio';
 $grupoEditar = null;
 if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
   $stmt = $pdo->prepare("SELECT * FROM grupos WHERE id = ?");
   $stmt->execute([(int)$_GET['edit_grupo_id']]);
   $grupoEditar = $stmt->fetch();
+}
+
+$dbStatus = $_GET['db_status'] ?? null;
+$dbMessage = null;
+$dbMessageType = 'success';
+
+switch ($dbStatus) {
+  case 'import_success':
+    $dbMessage = 'La base de datos se importó correctamente.';
+    $dbMessageType = 'success';
+    break;
+  case 'import_error':
+    $dbMessage = 'No se pudo importar la base de datos. Revisa que el archivo tenga un formato válido.';
+    $dbMessageType = 'error';
+    break;
+  case 'invalid_file':
+    $dbMessage = 'Selecciona un archivo .sql válido para realizar la importación.';
+    $dbMessageType = 'error';
+    break;
+  case 'export_error':
+    $dbMessage = 'Ocurrió un problema al generar el respaldo. Inténtalo de nuevo más tarde.';
+    $dbMessageType = 'error';
+    break;
 }
 ?>
 <!DOCTYPE html>
@@ -101,6 +165,12 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
 
     <div class="tab-content">
       <?php if ($tab === 'inicio'): ?>
+        <?php if ($dbMessage): ?>
+          <div class="feedback-message <?= $dbMessageType ?>">
+            <?= htmlspecialchars($dbMessage) ?>
+          </div>
+        <?php endif; ?>
+
         <section class="panel-section">
           <div class="card table-card">
             <div class="section-heading">
@@ -138,6 +208,55 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="card info-card">
+            <div class="section-heading">
+              <h2>Base de datos</h2>
+              <p>Consulta la configuración actual y gestiona respaldos de la información.</p>
+            </div>
+
+            <div class="database-card-content">
+              <div class="info-grid">
+                <div class="info-grid-item">
+                  <span class="info-label">Servidor</span>
+                  <span class="info-value"><?= htmlspecialchars($databaseInfo['host']) ?></span>
+                </div>
+                <div class="info-grid-item">
+                  <span class="info-label">Base de datos</span>
+                  <span class="info-value"><?= htmlspecialchars($databaseInfo['name']) ?></span>
+                </div>
+                <div class="info-grid-item">
+                  <span class="info-label">Usuario</span>
+                  <span class="info-value"><?= htmlspecialchars($databaseInfo['user']) ?></span>
+                </div>
+                <div class="info-grid-item">
+                  <span class="info-label">Tablas registradas</span>
+                  <span class="info-value"><?= $databaseInfo['tables'] ?></span>
+                </div>
+                <div class="info-grid-item">
+                  <span class="info-label">Tamaño estimado</span>
+                  <span class="info-value"><?= htmlspecialchars($databaseInfo['size_readable']) ?></span>
+                </div>
+              </div>
+
+              <div class="database-actions">
+                <form action="database_tools.php" method="post">
+                  <input type="hidden" name="action" value="export">
+                  <button type="submit" class="primary-button">Exportar base de datos</button>
+                </form>
+                <form action="database_tools.php" method="post" enctype="multipart/form-data" class="database-import-form">
+                  <input type="hidden" name="action" value="import">
+                  <label for="db_file" class="visually-hidden">Archivo SQL a importar</label>
+                  <input type="file" id="db_file" name="db_file" accept=".sql" required>
+                  <button type="submit" class="ghost-button">Importar base de datos</button>
+                </form>
+              </div>
+
+              <p class="database-hint">La importación reemplazará los datos actuales. Asegúrate de contar con un respaldo reciente antes de continuar.</p>
             </div>
           </div>
         </section>
