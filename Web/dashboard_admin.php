@@ -514,7 +514,7 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
                         <form method="GET" action="dashboard_admin.php" class="inline-form">
                           <input type="hidden" name="tab" value="usuarios">
                           <input type="hidden" name="edit_usuario_id" value="<?= $u['id'] ?>">
-                          <button type="submit" class="ghost-button">Editar</button>
+                          <button type="submit" class="ghost-button">Modificar</button>
                         </form>
                         <?php if (!$u['es_admin']): ?>
                           <form action="usuarios.php" method="POST" class="inline-form" onsubmit="return confirm('¿Borrar usuario?');">
@@ -539,8 +539,8 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
           <section class="panel-section">
             <div class="card form-card">
               <div class="section-heading">
-                <h3>Editar usuario</h3>
-                <p>Actualiza los datos del usuario seleccionado.</p>
+                <h3>Modificar usuario</h3>
+                <p>Modifica los datos del usuario <?= htmlspecialchars($usuarioEditar['email']) ?>.</p>
               </div>
               <form action="usuarios.php" method="POST" class="form-grid">
                 <input type="hidden" name="actualizar_usuario_id" value="<?= $usuarioEditar['id'] ?>">
