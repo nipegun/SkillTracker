@@ -30,14 +30,14 @@ CREATE TABLE oficinas (
 -- Tabla de usuarios
 CREATE TABLE usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL,
-  apellido_paterno VARCHAR(100) NOT NULL,
+  nombre VARCHAR(100),
+  apellido_paterno VARCHAR(100),
   apellido_materno VARCHAR(100),
   email VARCHAR(255) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  oficina_id INT NOT NULL,
-  empresa_id INT NOT NULL,
-  ciudad VARCHAR(255) NOT NULL,
+  oficina_id INT,
+  empresa_id INT,
+  ciudad VARCHAR(255),
   es_admin BOOLEAN NOT NULL DEFAULT 0,
   FOREIGN KEY (oficina_id) REFERENCES oficinas(id) ON DELETE RESTRICT ON UPDATE CASCADE,
   FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE RESTRICT ON UPDATE CASCADE

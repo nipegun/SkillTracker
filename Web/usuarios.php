@@ -9,25 +9,18 @@ if (!esSuperAdmin()) exit("Acceso denegado");
 if (isset($_POST['actualizar_usuario_id'])) {
     $uid = (int)$_POST['actualizar_usuario_id'];
 
-    if (
-        empty($_POST['nombre']) ||
-        empty($_POST['apellido_paterno']) ||
-        empty($_POST['email']) ||
-        empty($_POST['oficina_id']) ||
-        empty($_POST['empresa_id']) ||
-        empty($_POST['ciudad'])
-    ) {
-        exit("Faltan campos obligatorios.");
-    }
-
-    $nombre = trim($_POST['nombre']);
-    $apPat = trim($_POST['apellido_paterno']);
+    $nombre = trim($_POST['nombre'] ?? '');
+    $apPat = trim($_POST['apellido_paterno'] ?? '');
     $apMat = trim($_POST['apellido_materno'] ?? '');
-    $email = trim($_POST['email']);
-    $oficinaId = (int)$_POST['oficina_id'];
-    $empresaId = (int)$_POST['empresa_id'];
-    $ciudad = trim($_POST['ciudad']);
+    $email = trim($_POST['email'] ?? '');
+    $ciudad = trim($_POST['ciudad'] ?? '');
+    $oficinaId = isset($_POST['oficina_id']) && $_POST['oficina_id'] !== '' ? (int)$_POST['oficina_id'] : null;
+    $empresaId = isset($_POST['empresa_id']) && $_POST['empresa_id'] !== '' ? (int)$_POST['empresa_id'] : null;
     $esAdmin = isset($_POST['es_admin']) ? 1 : 0;
+
+    if ($email === '') {
+        exit("El email es obligatorio.");
+    }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         exit("Email inválido.");
@@ -44,6 +37,34 @@ if (isset($_POST['actualizar_usuario_id'])) {
     if ($stmt->fetchColumn() > 0) {
         exit("Ya existe un usuario con ese email.");
     }
+
+    if ($oficinaId !== null) {
+        $stmt = $pdo->prepare("SELECT empresa_id, ciudad FROM oficinas WHERE id = ?");
+        $stmt->execute([$oficinaId]);
+        $oficina = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$oficina) {
+            exit("Selecciona una oficina válida.");
+        }
+        if ($empresaId === null) {
+            $empresaId = (int)$oficina['empresa_id'];
+        }
+        if ($ciudad === '' && !empty($oficina['ciudad'])) {
+            $ciudad = $oficina['ciudad'];
+        }
+    }
+
+    if ($empresaId !== null) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE id = ?");
+        $stmt->execute([$empresaId]);
+        if ($stmt->fetchColumn() == 0) {
+            exit("Selecciona una empresa válida.");
+        }
+    }
+
+    $nombre = $nombre === '' ? null : $nombre;
+    $apPat = $apPat === '' ? null : $apPat;
+    $apMat = $apMat === '' ? null : $apMat;
+    $ciudad = $ciudad === '' ? null : $ciudad;
 
     $passwordHash = null;
     if (!empty($_POST['password'])) {
@@ -111,54 +132,81 @@ if (isset($_POST['editar_usuario_id'], $_POST['nuevo_nombre'])) {
 }
 
 // ---- Crear nuevo usuario ----
-if (
-  empty($_POST['nombre']) ||
-  empty($_POST['apellido_paterno']) ||
-  empty($_POST['email']) ||
-  empty($_POST['password']) ||
-  empty($_POST['oficina_id']) ||
-  empty($_POST['empresa_id']) ||
-  empty($_POST['ciudad'])
-) {
-  exit("Faltan campos obligatorios.");
+if (($_POST['accion'] ?? '') === 'crear_usuario') {
+    $nombre = trim($_POST['nombre'] ?? '');
+    $apPat = trim($_POST['apellido_paterno'] ?? '');
+    $apMat = trim($_POST['apellido_materno'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $ciudad = trim($_POST['ciudad'] ?? '');
+    $oficinaId = isset($_POST['oficina_id']) && $_POST['oficina_id'] !== '' ? (int)$_POST['oficina_id'] : null;
+    $empresaId = isset($_POST['empresa_id']) && $_POST['empresa_id'] !== '' ? (int)$_POST['empresa_id'] : null;
+    $esAdmin = isset($_POST['es_admin']) ? 1 : 0;
+
+    if ($email === '' || $password === '') {
+        exit("El email y la contraseña son obligatorios.");
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        exit("Email inválido.");
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
+    $stmt->execute([$email]);
+    if ($stmt->fetchColumn() > 0) {
+        exit("Ya existe un usuario con ese email.");
+    }
+
+    if ($oficinaId !== null) {
+        $stmt = $pdo->prepare("SELECT empresa_id, ciudad FROM oficinas WHERE id = ?");
+        $stmt->execute([$oficinaId]);
+        $oficina = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$oficina) {
+            exit("Selecciona una oficina válida.");
+        }
+        if ($empresaId === null) {
+            $empresaId = (int)$oficina['empresa_id'];
+        }
+        if ($ciudad === '' && !empty($oficina['ciudad'])) {
+            $ciudad = $oficina['ciudad'];
+        }
+    }
+
+    if ($empresaId !== null) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE id = ?");
+        $stmt->execute([$empresaId]);
+        if ($stmt->fetchColumn() == 0) {
+            exit("Selecciona una empresa válida.");
+        }
+    }
+
+    $nombre = $nombre === '' ? null : $nombre;
+    $apPat = $apPat === '' ? null : $apPat;
+    $apMat = $apMat === '' ? null : $apMat;
+    $ciudad = $ciudad === '' ? null : $ciudad;
+
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+    $id = obtenerSiguienteId($pdo, 'usuarios');
+    $stmt = $pdo->prepare("INSERT INTO usuarios (
+      id, nombre, apellido_paterno, apellido_materno, email,
+      password_hash, oficina_id, empresa_id, ciudad, es_admin
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $stmt->execute([
+      $id,
+      $nombre,
+      $apPat,
+      $apMat,
+      $email,
+      $passwordHash,
+      $oficinaId,
+      $empresaId,
+      $ciudad,
+      $esAdmin
+    ]);
+
+    header("Location: dashboard_admin.php?tab=usuarios");
+    exit;
 }
-
-// Validar email
-$email = trim($_POST['email']);
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-  exit("Email inválido.");
-}
-
-// Comprobar si ya existe un usuario con ese email
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
-$stmt->execute([$email]);
-if ($stmt->fetchColumn() > 0) {
-  exit("Ya existe un usuario con ese email.");
-}
-
-// Crear el hash de la contraseña
-$passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-// Insertar usuario
-$id = obtenerSiguienteId($pdo, 'usuarios');
-$stmt = $pdo->prepare("INSERT INTO usuarios (
-  id, nombre, apellido_paterno, apellido_materno, email,
-  password_hash, oficina_id, empresa_id, ciudad, es_admin
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-$stmt->execute([
-  $id,
-  $_POST['nombre'],
-  $_POST['apellido_paterno'],
-  $_POST['apellido_materno'] ?? '',
-  $email,
-  $passwordHash,
-  $_POST['oficina_id'],
-  $_POST['empresa_id'],
-  $_POST['ciudad'],
-  isset($_POST['es_admin']) ? 1 : 0
-]);
-
-header("Location: dashboard_admin.php?tab=usuarios");
-exit;
 ?>

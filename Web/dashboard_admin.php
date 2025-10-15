@@ -35,8 +35,8 @@ $oficinas = $pdo->query(
 $usuarios = $pdo->query("
   SELECT u.*, e.nombre AS empresa, o.nombre AS oficina, o.ciudad AS oficina_ciudad, g.nombre AS grupo
   FROM usuarios u
-  JOIN empresas e ON u.empresa_id = e.id
-  JOIN oficinas o ON u.oficina_id = o.id
+  LEFT JOIN empresas e ON u.empresa_id = e.id
+  LEFT JOIN oficinas o ON u.oficina_id = o.id
   LEFT JOIN grupos g ON e.grupo_id = g.id
 ORDER BY id ASC")->fetchAll();
 $habilidades = $pdo->query("SELECT * FROM habilidades ORDER BY id ASC")->fetchAll();
@@ -432,13 +432,14 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
               <p>Crea nuevas cuentas para tu organización desde el panel de administración.</p>
             </div>
             <form action="usuarios.php" method="POST" class="form-grid">
+              <input type="hidden" name="accion" value="crear_usuario">
               <div class="form-field">
                 <label for="nombre_usuario">Nombre</label>
-                <input type="text" id="nombre_usuario" name="nombre" required>
+                <input type="text" id="nombre_usuario" name="nombre">
               </div>
               <div class="form-field">
                 <label for="apellido_paterno">Apellido paterno</label>
-                <input type="text" id="apellido_paterno" name="apellido_paterno" required>
+                <input type="text" id="apellido_paterno" name="apellido_paterno">
               </div>
               <div class="form-field">
                 <label for="apellido_materno">Apellido materno</label>
@@ -454,8 +455,8 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
               </div>
               <div class="form-field">
                 <label for="empresa_usuario">Empresa</label>
-                <select name="empresa_id" id="empresa_usuario" required>
-                  <option value="" disabled selected>Selecciona una empresa</option>
+                <select name="empresa_id" id="empresa_usuario">
+                  <option value="" selected>Sin empresa asignada</option>
                   <?php foreach ($empresas as $e): ?>
                     <option value="<?= $e['id'] ?>"><?= htmlspecialchars($e['nombre']) ?></option>
                   <?php endforeach; ?>
@@ -463,8 +464,8 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
               </div>
               <div class="form-field">
                 <label for="oficina_usuario">Oficina</label>
-                <select name="oficina_id" id="oficina_usuario" required>
-                  <option value="" disabled selected>Selecciona una oficina</option>
+                <select name="oficina_id" id="oficina_usuario">
+                  <option value="" selected>Sin oficina asignada</option>
                   <?php foreach ($oficinas as $o): ?>
                     <option value="<?= $o['id'] ?>"><?= htmlspecialchars($o['nombre']) ?> - <?= htmlspecialchars($o['ciudad']) ?></option>
                   <?php endforeach; ?>
@@ -472,7 +473,7 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
               </div>
               <div class="form-field">
                 <label for="ciudad_usuario">Ciudad</label>
-                <input type="text" id="ciudad_usuario" name="ciudad" required>
+                <input type="text" id="ciudad_usuario" name="ciudad">
               </div>
               <div class="form-field">
                 <label class="checkbox-inline">
@@ -505,9 +506,9 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
                     <tr>
                       <td><?= htmlspecialchars($u['email']) ?></td>
                       <td><?= htmlspecialchars($u['grupo'] ?? '—') ?></td>
-                      <td><?= htmlspecialchars($u['empresa']) ?></td>
-                      <td><?= htmlspecialchars($u['oficina_ciudad'] ?: $u['ciudad']) ?></td>
-                      <td><?= htmlspecialchars($u['oficina']) ?></td>
+                      <td><?= $u['empresa'] ? htmlspecialchars($u['empresa']) : '—' ?></td>
+                      <td><?= ($u['oficina_ciudad'] ?: $u['ciudad']) ? htmlspecialchars($u['oficina_ciudad'] ?: $u['ciudad']) : '—' ?></td>
+                      <td><?= $u['oficina'] ? htmlspecialchars($u['oficina']) : '—' ?></td>
                       <td><?= $u['es_admin'] ? 'Admin' : 'Usuario' ?></td>
                       <td class="table-actions">
                         <form method="GET" action="dashboard_admin.php" class="inline-form">
@@ -545,11 +546,11 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
                 <input type="hidden" name="actualizar_usuario_id" value="<?= $usuarioEditar['id'] ?>">
                 <div class="form-field">
                   <label for="nombre_usuario_edit">Nombre</label>
-                  <input type="text" id="nombre_usuario_edit" name="nombre" value="<?= htmlspecialchars($usuarioEditar['nombre']) ?>" required>
+                  <input type="text" id="nombre_usuario_edit" name="nombre" value="<?= htmlspecialchars($usuarioEditar['nombre']) ?>">
                 </div>
                 <div class="form-field">
                   <label for="apellido_paterno_edit">Apellido paterno</label>
-                  <input type="text" id="apellido_paterno_edit" name="apellido_paterno" value="<?= htmlspecialchars($usuarioEditar['apellido_paterno']) ?>" required>
+                  <input type="text" id="apellido_paterno_edit" name="apellido_paterno" value="<?= htmlspecialchars($usuarioEditar['apellido_paterno']) ?>">
                 </div>
                 <div class="form-field">
                   <label for="apellido_materno_edit">Apellido materno</label>
@@ -561,23 +562,25 @@ if ($tab === 'grupos' && isset($_GET['edit_grupo_id'])) {
                 </div>
                 <div class="form-field">
                   <label for="empresa_usuario_edit">Empresa</label>
-                  <select name="empresa_id" id="empresa_usuario_edit" required>
+                  <select name="empresa_id" id="empresa_usuario_edit">
+                    <option value="" <?= $usuarioEditar['empresa_id'] === null ? 'selected' : '' ?>>Sin empresa asignada</option>
                     <?php foreach ($empresas as $e): ?>
-                      <option value="<?= $e['id'] ?>" <?= $usuarioEditar['empresa_id']==$e['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
+                      <option value="<?= $e['id'] ?>" <?= (int)$usuarioEditar['empresa_id'] === (int)$e['id'] ? 'selected' : '' ?>><?= htmlspecialchars($e['nombre']) ?></option>
                     <?php endforeach; ?>
                   </select>
                 </div>
                 <div class="form-field">
                   <label for="oficina_usuario_edit">Oficina</label>
-                  <select name="oficina_id" id="oficina_usuario_edit" required>
+                  <select name="oficina_id" id="oficina_usuario_edit">
+                    <option value="" <?= $usuarioEditar['oficina_id'] === null ? 'selected' : '' ?>>Sin oficina asignada</option>
                     <?php foreach ($oficinas as $o): ?>
-                      <option value="<?= $o['id'] ?>" <?= $usuarioEditar['oficina_id']==$o['id'] ? 'selected' : '' ?>><?= htmlspecialchars($o['nombre']) ?> - <?= htmlspecialchars($o['ciudad']) ?></option>
+                      <option value="<?= $o['id'] ?>" <?= (int)$usuarioEditar['oficina_id'] === (int)$o['id'] ? 'selected' : '' ?>><?= htmlspecialchars($o['nombre']) ?> - <?= htmlspecialchars($o['ciudad']) ?></option>
                     <?php endforeach; ?>
                   </select>
                 </div>
                 <div class="form-field">
                   <label for="ciudad_usuario_edit">Ciudad</label>
-                  <input type="text" id="ciudad_usuario_edit" name="ciudad" value="<?= htmlspecialchars($usuarioEditar['ciudad']) ?>" required>
+                  <input type="text" id="ciudad_usuario_edit" name="ciudad" value="<?= htmlspecialchars($usuarioEditar['ciudad']) ?>">
                 </div>
                 <div class="form-field">
                   <label for="password_edit">Actualizar contraseña</label>
