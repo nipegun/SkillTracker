@@ -100,14 +100,14 @@ INSERT INTO usuarios (
   ciudad,
   es_admin
 ) VALUES (
-  'admin',
-  'admin',
-  '',
+  NULL,
+  NULL,
+  NULL,
   'admin@skilltracker.com',
   '$2y$10$7ndm8FUOwRw5ZLgh42HWDuhS79hclcEY2Fcs5SMT26rV5yHulU98y', -- (hash de "admin123" obtenido con 'mkpasswd -m bcrypt admin123' en bash)
-  1,
-  1,
-  'Madrid',
+  NULL,
+  NULL,
+  NULL,
   1
 );
 
