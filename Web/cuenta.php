@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$stmt = $pdo->prepare('SELECT u.id, u.nombre, u.apellido_paterno, u.apellido_materno, u.email, u.ciudad, u.oficina_id, u.empresa_id, u.es_admin, e.nombre AS empresa_nombre, o.nombre AS oficina_nombre, o.ciudad AS oficina_ciudad FROM usuarios u JOIN empresas e ON u.empresa_id = e.id JOIN oficinas o ON u.oficina_id = o.id WHERE u.id = ?');
+$stmt = $pdo->prepare('SELECT u.id, u.nombre, u.apellido_paterno, u.apellido_materno, u.email, u.ciudad, u.oficina_id, u.empresa_id, u.es_admin, e.nombre AS empresa_nombre, o.nombre AS oficina_nombre, o.ciudad AS oficina_ciudad FROM usuarios u LEFT JOIN empresas e ON u.empresa_id = e.id LEFT JOIN oficinas o ON u.oficina_id = o.id WHERE u.id = ?');
 $stmt->execute([$idUsuario]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
