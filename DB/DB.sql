@@ -3,6 +3,20 @@ CREATE DATABASE IF NOT EXISTS SkillTracker CHARACTER SET utf8mb4 COLLATE utf8mb4
 
 USE SkillTracker;
 
+-- Reset database objects to allow re-importing without manual cleanup
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS proyecto_usuario;
+DROP TABLE IF EXISTS proyectos;
+DROP TABLE IF EXISTS usuario_habilidad;
+DROP TABLE IF EXISTS habilidades;
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS oficinas;
+DROP TABLE IF EXISTS empresas;
+DROP TABLE IF EXISTS grupos;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- Tabla de grupos
 CREATE TABLE grupos (
   id INT AUTO_INCREMENT PRIMARY KEY,
